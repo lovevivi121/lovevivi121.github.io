@@ -1,6 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>9.25-学习计算机网络MAC层、操作系统X86架构</title>
+    <url>/posts/3/</url>
+    <content><![CDATA[<ol>
+<li>x86架构<ol>
+<li>需求<ol>
+<li>做生意要开放的营商环境，所以操作系统也需要一个统一的开放的架构</li>
+</ol>
+</li>
+<li>计算机的工作模式是什么样的？</li>
+<li>cpu和内存是如何配合工作的？<ol>
+<li>cpu包裹三个部分，运算、数据、控制单元</li>
+<li>从之后面就讲到了内存的数据和总线的位数有无统一标准？没有标准操作系统很难办，因为操作系统作为软件层没办法实现通用的运算逻辑</li>
+</ol>
+</li>
+<li>由此出现了X86架构<ol>
+<li>基本概念<ol>
+<li>英特尔的技术是行业的开放事实标准。由于这个系列开端于 8086，因此称为 x86 架构。</li>
+</ol>
+</li>
+<li>8086处理器<ol>
+<li>数据单元<ol>
+<li>内部有8个16位的通用寄存器，分别是AX BX CX DX SP BP SI DI 用于暂存数据</li>
+<li>AX BX CX DX 可以分成两个8位的寄存器使用，分别是AH AL BH BL etc，这样长短数据都可以暂存了</li>
+</ol>
+</li>
+<li>控制单元<ol>
+<li>IP寄存器就是指令指针寄存器，指向代码段中下一条指令的位置。cpu会根据它来不断地将指令从内存的代码段中加载到cpu的指令队列中，然后交给运算单元执行。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>计算机网络<ol>
+<li>MAC层<ol>
+<li>基本概念<ol>
+<li>MAC层即媒体访问控制，数据链路层。</li>
+</ol>
+</li>
+<li>解决的主要问题<ol>
+<li>这个包是发给谁的？谁该接收？</li>
+<li>如果大家都在发，谁先发，谁后发？会不会混乱？</li>
+<li>如果发送的时候出现错误怎么办？</li>
+<li>一个广播的网络里面接入了N台机器，怎么直到每个MAC地址是谁？</li>
+<li>能否直到目标MAC地址就将数据包转到对应口的机器，从而不广播呢？</li>
+</ol>
+</li>
+<li>解决方案<ol>
+<li>针对问题一，通过MAC地址来确定发给谁，谁接收。有了目标MAC地址和源MAC地址，数据包在链路上广播，MAC的网卡才能发现这个包是给他的。MAC的网卡把包收进来，然后打开IP包交给网络层。</li>
+<li>针对第二个问题，学名叫多路访问，有很多算法可以解决多路访问问题<ol>
+<li>信道划分，即分多个车道，每个车道中的车你走你的，我走我的</li>
+<li>轮流协议，就像车今天单号出行，明天双号出行，轮着来</li>
+<li>随机接入协议，有事儿先出门，发现特堵，就回去，错峰再出行（以太网）</li>
+</ol>
+</li>
+<li>针对问题三，对于以太网，MAC网络包中的最后4Byte是CRC循环冗余检测，通过XOR异或算法来计算整个包是否在发送过程中出现错误。</li>
+<li>针对第四个问题，MAC层使用了ARP协议，也就是已知IP地址，求MAC地址的协议。具体机制是发送方“吼”一声，发送一个广播包，谁是这个IP谁来回答，为了避免每次都用ARP请求，机器会进行ARP缓存，并且过一段时间过期更新。<ol>
+<li>ARP报文</li>
+</ol>
+</li>
+<li>针对第五个问题，有一个MAC层设备称为交换机，交换机会记住第一次广播吼的MAC地址，形成一个转发表，这样以后的目的地址是该MAC地址的就直接发送到这个口即可，不必广播了。</li>
+</ol>
+</li>
+<li>MAC网络包格式<ol>
+<li>前6byte是目标MAC地址，再是6byte的源MAC地址，然后是2byte的类型（0800表示IP数据报，0806表示ARP请求和应答），然后是46－1500byte的数据，最后是4byteCRC循环冗余校验码</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Diary</category>
+      </categories>
+      <tags>
+        <tag>Diary</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库-基本架构</title>
     <url>/posts/4/</url>
     <content><![CDATA[<h1 id="大体上MySQL可以分为Server层和引擎层两个部分"><a href="#大体上MySQL可以分为Server层和引擎层两个部分" class="headerlink" title="大体上MySQL可以分为Server层和引擎层两个部分"></a>大体上MySQL可以分为Server层和引擎层两个部分</h1><h1 id="Server层"><a href="#Server层" class="headerlink" title="Server层"></a>Server层</h1><ul>
@@ -98,19 +194,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>开发模板</title>
     <url>/posts/1/</url>
     <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
@@ -127,89 +210,6 @@
       <tags>
         <tag>总结</tag>
         <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>9.25-学习计算机网络MAC层、操作系统X86架构</title>
-    <url>/posts/3/</url>
-    <content><![CDATA[<ol>
-<li>x86架构<ol>
-<li>需求<ol>
-<li>做生意要开放的营商环境，所以操作系统也需要一个统一的开放的架构</li>
-</ol>
-</li>
-<li>计算机的工作模式是什么样的？</li>
-<li>cpu和内存是如何配合工作的？<ol>
-<li>cpu包裹三个部分，运算、数据、控制单元</li>
-<li>从之后面就讲到了内存的数据和总线的位数有无统一标准？没有标准操作系统很难办，因为操作系统作为软件层没办法实现通用的运算逻辑</li>
-</ol>
-</li>
-<li>由此出现了X86架构<ol>
-<li>基本概念<ol>
-<li>英特尔的技术是行业的开放事实标准。由于这个系列开端于 8086，因此称为 x86 架构。</li>
-</ol>
-</li>
-<li>8086处理器<ol>
-<li>数据单元<ol>
-<li>内部有8个16位的通用寄存器，分别是AX BX CX DX SP BP SI DI 用于暂存数据</li>
-<li>AX BX CX DX 可以分成两个8位的寄存器使用，分别是AH AL BH BL etc，这样长短数据都可以暂存了</li>
-</ol>
-</li>
-<li>控制单元<ol>
-<li>IP寄存器就是指令指针寄存器，指向代码段中下一条指令的位置。cpu会根据它来不断地将指令从内存的代码段中加载到cpu的指令队列中，然后交给运算单元执行。</li>
-</ol>
-</li>
-</ol>
-</li>
-</ol>
-</li>
-</ol>
-</li>
-<li>计算机网络<ol>
-<li>MAC层<ol>
-<li>基本概念<ol>
-<li>MAC层即媒体访问控制，数据链路层。</li>
-</ol>
-</li>
-<li>解决的主要问题<ol>
-<li>这个包是发给谁的？谁该接收？</li>
-<li>如果大家都在发，谁先发，谁后发？会不会混乱？</li>
-<li>如果发送的时候出现错误怎么办？</li>
-<li>一个广播的网络里面接入了N台机器，怎么直到每个MAC地址是谁？</li>
-<li>能否直到目标MAC地址就将数据包转到对应口的机器，从而不广播呢？</li>
-</ol>
-</li>
-<li>解决方案<ol>
-<li>针对问题一，通过MAC地址来确定发给谁，谁接收。有了目标MAC地址和源MAC地址，数据包在链路上广播，MAC的网卡才能发现这个包是给他的。MAC的网卡把包收进来，然后打开IP包交给网络层。</li>
-<li>针对第二个问题，学名叫多路访问，有很多算法可以解决多路访问问题<ol>
-<li>信道划分，即分多个车道，每个车道中的车你走你的，我走我的</li>
-<li>轮流协议，就像车今天单号出行，明天双号出行，轮着来</li>
-<li>随机接入协议，有事儿先出门，发现特堵，就回去，错峰再出行（以太网）</li>
-</ol>
-</li>
-<li>针对问题三，对于以太网，MAC网络包中的最后4Byte是CRC循环冗余检测，通过XOR异或算法来计算整个包是否在发送过程中出现错误。</li>
-<li>针对第四个问题，MAC层使用了ARP协议，也就是已知IP地址，求MAC地址的协议。具体机制是发送方“吼”一声，发送一个广播包，谁是这个IP谁来回答，为了避免每次都用ARP请求，机器会进行ARP缓存，并且过一段时间过期更新。<ol>
-<li>ARP报文</li>
-</ol>
-</li>
-<li>针对第五个问题，有一个MAC层设备称为交换机，交换机会记住第一次广播吼的MAC地址，形成一个转发表，这样以后的目的地址是该MAC地址的就直接发送到这个口即可，不必广播了。</li>
-</ol>
-</li>
-<li>MAC网络包格式<ol>
-<li>前6byte是目标MAC地址，再是6byte的源MAC地址，然后是2byte的类型（0800表示IP数据报，0806表示ARP请求和应答），然后是46－1500byte的数据，最后是4byteCRC循环冗余校验码</li>
-</ol>
-</li>
-</ol>
-</li>
-</ol>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Diary</category>
-      </categories>
-      <tags>
-        <tag>Diary</tag>
       </tags>
   </entry>
 </search>
