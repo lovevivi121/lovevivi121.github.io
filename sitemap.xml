@@ -65,7 +65,7 @@
   </url>
   
   <url>
-    <loc>https://github.com/lovevivi121/lovevivi121.github.io/tags/index.html</loc>
+    <loc>https://github.com/lovevivi121/lovevivi121.github.io/movies/index.html</loc>
     
     <lastmod>2023-05-28</lastmod>
     
@@ -74,7 +74,7 @@
   </url>
   
   <url>
-    <loc>https://github.com/lovevivi121/lovevivi121.github.io/movies/index.html</loc>
+    <loc>https://github.com/lovevivi121/lovevivi121.github.io/tags/index.html</loc>
     
     <lastmod>2023-05-28</lastmod>
     
@@ -92,7 +92,7 @@
   </url>
   
   <url>
-    <loc>https://github.com/lovevivi121/lovevivi121.github.io/gallery/index.html</loc>
+    <loc>https://github.com/lovevivi121/lovevivi121.github.io/contact/index.html</loc>
     
     <lastmod>2023-05-28</lastmod>
     
@@ -110,16 +110,7 @@
   </url>
   
   <url>
-    <loc>https://github.com/lovevivi121/lovevivi121.github.io/contact/index.html</loc>
-    
-    <lastmod>2023-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://github.com/lovevivi121/lovevivi121.github.io/bangumis/index.html</loc>
+    <loc>https://github.com/lovevivi121/lovevivi121.github.io/gallery/index.html</loc>
     
     <lastmod>2023-05-28</lastmod>
     
@@ -129,6 +120,15 @@
   
   <url>
     <loc>https://github.com/lovevivi121/lovevivi121.github.io/books/index.html</loc>
+    
+    <lastmod>2023-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://github.com/lovevivi121/lovevivi121.github.io/bangumis/index.html</loc>
     
     <lastmod>2023-05-28</lastmod>
     
@@ -146,6 +146,13 @@
 
   
   <url>
+    <loc>https://github.com/lovevivi121/lovevivi121.github.io/tags/Diary/</loc>
+    <lastmod>2023-10-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://github.com/lovevivi121/lovevivi121.github.io/tags/%E6%80%BB%E7%BB%93/</loc>
     <lastmod>2023-10-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -154,13 +161,6 @@
   
   <url>
     <loc>https://github.com/lovevivi121/lovevivi121.github.io/tags/blog/</loc>
-    <lastmod>2023-10-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://github.com/lovevivi121/lovevivi121.github.io/tags/Diary/</loc>
     <lastmod>2023-10-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -176,6 +176,13 @@
 
   
   <url>
+    <loc>https://github.com/lovevivi121/lovevivi121.github.io/categories/Diary/</loc>
+    <lastmod>2023-10-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://github.com/lovevivi121/lovevivi121.github.io/categories/GO/</loc>
     <lastmod>2023-10-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -184,13 +191,6 @@
   
   <url>
     <loc>https://github.com/lovevivi121/lovevivi121.github.io/categories/blog/</loc>
-    <lastmod>2023-10-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://github.com/lovevivi121/lovevivi121.github.io/categories/Diary/</loc>
     <lastmod>2023-10-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

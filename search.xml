@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>开发模板</title>
-    <url>/posts/1/</url>
-    <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
-<li>修改公告 在source&#x2F;_data&#x2F;butterfly.yml中找到并修改</li>
-<li>添加文章 在source&#x2F;_posts 下面的对应分类中copy本模板然后修改内容即可</li>
-<li>添加分类 在写文章的时候写上对应分类即可</li>
-<li>添加图片 首先添加到图床中，然后将链接放上去</li>
-<li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
-</ol>
-]]></content>
-      <categories>
-        <category>blog</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>9.25-学习计算机网络MAC层、操作系统X86架构</title>
     <url>/posts/3/</url>
     <content><![CDATA[<ol>
@@ -113,6 +81,38 @@
       </categories>
       <tags>
         <tag>Diary</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>开发模板</title>
+    <url>/posts/1/</url>
+    <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
+<li>修改公告 在source&#x2F;_data&#x2F;butterfly.yml中找到并修改</li>
+<li>添加文章 在source&#x2F;_posts 下面的对应分类中copy本模板然后修改内容即可</li>
+<li>添加分类 在写文章的时候写上对应分类即可</li>
+<li>添加图片 首先添加到图床中，然后将链接放上去</li>
+<li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
+</ol>
+]]></content>
+      <categories>
+        <category>blog</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
