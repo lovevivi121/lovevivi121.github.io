@@ -1,0 +1,181 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>数据库-日志系统 | 奇祁的博客</title><meta name="description" content="更新语句的执行流程？ 和查询流程不同的是，更新语句还要涉及两个重要的日志模块，分别是redo log（重做日志）和binlog（归档日志）。  redo log 问题提出 加入对于MySQL的每次更新操作都要写进磁盘，然后磁盘也得找到对应的那条记录，然后才能更新，整个过程的IO、查询成本太高。   解决方案（WAL） 基本概念（写日志，更新，跟新，固定，循环，crashsafe） 为了解决这个问题"><meta name="keywords" content="总结,MySQL"><meta name="author" content="奇祁"><meta name="copyright" content="奇祁"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://github.com/lovevivi121/lovevivi121.github.io/posts/5/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="preconnect" href="//zz.bdstatic.com"/><meta property="og:type" content="article"><meta property="og:title" content="数据库-日志系统"><meta property="og:url" content="https://github.com/lovevivi121/lovevivi121.github.io/posts/5/"><meta property="og:site_name" content="奇祁的博客"><meta property="og:description" content="更新语句的执行流程？ 和查询流程不同的是，更新语句还要涉及两个重要的日志模块，分别是redo log（重做日志）和binlog（归档日志）。  redo log 问题提出 加入对于MySQL的每次更新操作都要写进磁盘，然后磁盘也得找到对应的那条记录，然后才能更新，整个过程的IO、查询成本太高。   解决方案（WAL） 基本概念（写日志，更新，跟新，固定，循环，crashsafe） 为了解决这个问题"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/HCLonely/hclonely.github.io/img/Butterfly/006.webp"><meta property="article:published_time" content="2023-10-03T11:46:26.935Z"><meta property="article:modified_time" content="2023-10-03T11:54:02.419Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="next" title="数据库-基本架构" href="https://github.com/lovevivi121/lovevivi121.github.io/posts/4/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: true,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2023-10-03 19:54:02'
+}</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@master/Hexo/css/flink.min.css"><meta name="generator" content="Hexo 5.4.1"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/./img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">5</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">4</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><i class="fa-fw fab fa-xbox"></i><span> 聚宝盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><i class="fa-fw far fa-comment"></i><span> 微语</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%AF%AD%E5%8F%A5%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">更新语句的执行流程？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#redo-log"><span class="toc-number">2.</span> <span class="toc-text">redo log</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#binlog"><span class="toc-number">3.</span> <span class="toc-text">binlog</span></a></li></ol></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/HCLonely/hclonely.github.io/img/Butterfly/006.webp)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">奇祁的博客</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><i class="fa-fw fab fa-xbox"></i><span> 聚宝盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><i class="fa-fw far fa-comment"></i><span> 微语</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">数据库-日志系统</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2023-10-03 19:46:26"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2023-10-03</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2023-10-03 19:54:02"><i class="fas fa-history fa-fw"></i> 更新于 2023-10-03</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/MySQL/">MySQL</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="更新语句的执行流程？"><a href="#更新语句的执行流程？" class="headerlink" title="更新语句的执行流程？"></a>更新语句的执行流程？</h1><ul>
+<li>和查询流程不同的是，更新语句还要涉及两个重要的日志模块，分别是redo log（重做日志）和binlog（归档日志）。</li>
+</ul>
+<h1 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h1><ul>
+<li>问题提出<ul>
+<li>加入对于MySQL的每次更新操作都要写进磁盘，然后磁盘也得找到对应的那条记录，然后才能更新，整个过程的IO、查询成本太高。</li>
+</ul>
+</li>
+<li>解决方案（WAL）<ul>
+<li>基本概念（写日志，更新，跟新，固定，循环，crashsafe）<ul>
+<li>为了解决这个问题，MySQL使用到了WAL技术，全称Write-Ahead Logging。它的关键点是先写日志，再写磁盘。具体来说，当有一条记录需要更新时，InnoDB引擎会先把记录写到redo log里面，并且更新内存，这时候更新操作就算完成了。同时InnoDB会再实弹的时候将这个操作记录更新到磁盘里面。InnoDB的redo log是固定大小的，比如可以配置为一组4个文件，一个文件1GB，总共4GB，写入时，从头开始，写到末尾就回到开头，循环写。有了redo log，InnoDB就可以保证即使数据库发生异常重启，之前提交的记录也不会丢失，该能力称为crash-safe。redo log是InnoDB引擎特有的日志。</li>
+</ul>
+</li>
+<li>redo log实现机制（write 位置，后移，循环，check 擦除，空着，追上）<ul>
+<li>在实现中，有两个主要字段分别是write pos和check point。write pos记录当前位置，一边写一边后移，写到第3号文件末尾后就回到0号文件开头。check point是当前要擦除的位置，也是往后推移并且循环的，擦除记录前要把记录更新到数据文件。writepos和checkpoint之间空着的部分，便是可以用来记录新的操作。如果write pos追上了check point，表示已经满了，此时不能再执行更新操作，需要先擦掉一些记录，把check point前推一些。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h1><ul>
+<li><p>基本概念（server层，归档）</p>
+<ul>
+<li>binlog是MySQL的Server层的二进制日志，用于记录所有对数据库的增删改操作，叫做归档日志。</li>
+</ul>
+</li>
+<li><p>为什么有两个日志？（MyISQM无crashsafe能力，binlog只能用于归档，InnoDB引擎便使用另外日志系统redo来实现）</p>
+<ul>
+<li>因为最开始 MySQL 里并没有 InnoDB 引擎。MySQL 自带的引擎是 MyISAM，但是MyISAM 没有 crash-safe 的能力，binlog 日志只能用于归档。而 InnoDB 是另一个公司以插件形式引入 MySQL 的，既然只依靠 binlog 是没有 crash-safe 能力的，所以 InnoDB使用另外一套日志系统——也就是 redo log 来实现 crash-safe 能力。</li>
+</ul>
+</li>
+<li><p>redo log 和 binlog有什么不同？</p>
+<ol>
+<li>redo log 是 InnoDB 引擎特有的；binlog 是 MySQL 的 Server 层实现的，所有引擎都可以使用。</li>
+<li>redo log 是物理日志，记录的是“在某个数据页上做了什么修改”；binlog 是逻辑日志，记录的是这个语句的原始逻辑，比如“给 ID&#x3D;2 这一行的 c 字段加 1 ”。</li>
+<li>redo log 是循环写的，空间固定会用完；binlog 是可以追加写入的。“追加写”是指binlog 文件写到一定大小后会切换到下一个，并不会覆盖以前的日志。</li>
+</ol>
+</li>
+<li><p>执行器和InnoDB引擎在语句update T set c&#x3D;c+1 where ID&#x3D;2;中的内部流程</p>
+<ol>
+<li>执行器首先找到引擎取ID&#x3D;2这一行，ID是主键，引擎直接用树搜索找到这一行。如果ID&#x3D;2这一行所在的数据页本来就在内存中，就直接返回给执行器；否则选哟先从磁盘中读入内存，然后再返回。</li>
+<li>执行器拿到引擎给的行数据后，把这个值加上1，得到新的一行数据，再调用引擎接口写入新数据。</li>
+<li>引擎将这一行新数据更新到内存中，同时将这个更新操作记录到redo log里面，此时redo log处于prepare状态。然后告知执行器完成了，随时可以提交事务。</li>
+<li>执行器生成这个操作的binlog，并把binlog写入磁盘。</li>
+<li>执行器调用引擎的提交事务接口，引擎把刚写入的redo log改成提交（commit）状态，更新完成</li>
+</ol>
+</li>
+<li><p>为什么必须有两阶段提交？</p>
+<ul>
+<li>什么是<ul>
+<li>两阶段提交是说redo log 先 prepare，再刷新 binlog ，再 redo log commit 的过程。</li>
+</ul>
+</li>
+<li>原因<ul>
+<li>要说明这个问题，首先追溯到另一个问题：怎样让数据库恢复到半个月内任意一秒的状态？首先通过找到最近一次全量备份，并记录下备份时间点。接着从这个时间点开始将备份的binlog依次取出，重放到需要的时间点。这样临时库就和误删之前的线上库一样了，然后可以把表中的数据从临时库中取出来，按需要恢复到线上去。</li>
+<li>说完恢复过程，再回来说说为什么需要两阶段提交。这里用反证法进行解释。假设不用两阶段提交，那么要么就是先写完redo log再写完binlog，要么就是先写完binlog再写完redo log。假设先写binlog后写redo log，在写完binlog后写完redo log前，MySQL宕机了，会导致线上库并没有更新，但是binlog里面已经记录了更新日志，所以临时库和线上库会出现大量的不一致的数据。假设先写完redo log并且在写完binlog之前，MySQL宕机了，此时线上库已经更新了数据，而binlog没有这条更新日志，所以临时库会缺失大量更新导致和线上库数据不一致，而且redo log在做恢复的时候每次都需要去binlog查看该事务是否已经写入，严重影响了性能。而如果是两阶段提交，处于 commit 阶段的事务都会直接恢复，处于 prepare 阶段才需要去看 binlog。</li>
+<li>假如使用两段式提交，在MySQL宕机恢复的时候，如果发现redo log 中某个事务处于commit状态，则说明binlog一定记录了，直接恢复即可；如果redo log 某个事务处于prepare状态，则查看binlgo中是否有该事务的数据（依据全局唯一事务ID），如果有，则恢复，否则丢弃redo log的该条事务。这样从而保证redo log 和binlog 的数据一致性。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">奇祁</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://github.com/lovevivi121/lovevivi121.github.io/posts/5/">https://github.com/lovevivi121/lovevivi121.github.io/posts/5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://github.com/lovevivi121/lovevivi121.github.io" target="_blank">奇祁的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%80%BB%E7%BB%93/">总结</a><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/HCLonely/hclonely.github.io/img/Butterfly/006.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/4/"><img class="next-cover" data-src="https://cdn.jsdelivr.net/gh/HCLonely/hclonely.github.io/img/Butterfly/006.webp" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">数据库-基本架构</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/posts/4/" title="数据库-基本架构"><img class="relatedPosts_cover" data-src="https://cdn.jsdelivr.net/gh/HCLonely/hclonely.github.io/img/Butterfly/006.webp"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-02</div><div class="relatedPosts_title">数据库-基本架构</div></div></a></div><div class="relatedPosts_item"><a href="/posts/1/" title="开发模板"><img class="relatedPosts_cover" data-src="https://cdn.jsdelivr.net/gh/HCLonely/hclonely.github.io/img/Butterfly/006.webp"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-28</div><div class="relatedPosts_title">开发模板</div></div></a></div><div class="relatedPosts_item"><a href="/posts/2/" title="Go并发编程"><img class="relatedPosts_cover" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/111946610_p0_master1200.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-25</div><div class="relatedPosts_title">Go并发编程</div></div></a></div></div></div><hr><div id="post-comment"><div class="comment-head"><div class="comment-headling"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div class="comments-items-1" data-name="Livere"><div id="lv-container" data-id="city" data-uid="MTAyMC81ODUyNC8zNDk4Nw=="><script>function loadlivere () {
+  (function(d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+      if (typeof LivereTower === 'function') { return; }
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+}
+
+if ('Livere' === 'Livere' || false) {
+  window.addEventListener('load', loadlivere)
+}
+else {
+  function loadOtherComment () {
+    loadlivere()
+  }
+}</script></div></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2023  <i id="heartbeat" class="fa fas fa-heartbeat"></i> 奇祁</div><div class="framework-info"><span>驱动 </span><a target="_blank" rel="noopener" href="https://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly"><span>Butterfly</span></a></div></div><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></head></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script src="/js/calendar.js"></script><script src="/js/languages.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"right","width":120,"height":260},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
