@@ -84,19 +84,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>开发模板</title>
     <url>/posts/1/</url>
     <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
@@ -109,6 +96,19 @@
 ]]></content>
       <categories>
         <category>blog</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
       </categories>
       <tags>
         <tag>总结</tag>
@@ -200,6 +200,80 @@
 </li>
 <li>什么是随机 IO 和顺序 IO？<ul>
 <li>磁盘读写数据的两种方式。随机 IO 需要先找到地址，再读写数据，每次拿到的地址都是随机的。而顺序 IO，由于地址是连贯的，找到地址后，一次可以读写许多数据，效率比较高。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-日志系统</title>
+    <url>/posts/5/</url>
+    <content><![CDATA[<h1 id="更新语句的执行流程？"><a href="#更新语句的执行流程？" class="headerlink" title="更新语句的执行流程？"></a>更新语句的执行流程？</h1><ul>
+<li>和查询流程不同的是，更新语句还要涉及两个重要的日志模块，分别是redo log（重做日志）和binlog（归档日志）。</li>
+</ul>
+<h1 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h1><ul>
+<li>问题提出<ul>
+<li>加入对于MySQL的每次更新操作都要写进磁盘，然后磁盘也得找到对应的那条记录，然后才能更新，整个过程的IO、查询成本太高。</li>
+</ul>
+</li>
+<li>解决方案（WAL）<ul>
+<li>基本概念（写日志，更新，跟新，固定，循环，crashsafe）<ul>
+<li>为了解决这个问题，MySQL使用到了WAL技术，全称Write-Ahead Logging。它的关键点是先写日志，再写磁盘。具体来说，当有一条记录需要更新时，InnoDB引擎会先把记录写到redo log里面，并且更新内存，这时候更新操作就算完成了。同时InnoDB会再实弹的时候将这个操作记录更新到磁盘里面。InnoDB的redo log是固定大小的，比如可以配置为一组4个文件，一个文件1GB，总共4GB，写入时，从头开始，写到末尾就回到开头，循环写。有了redo log，InnoDB就可以保证即使数据库发生异常重启，之前提交的记录也不会丢失，该能力称为crash-safe。redo log是InnoDB引擎特有的日志。</li>
+</ul>
+</li>
+<li>redo log实现机制（write 位置，后移，循环，check 擦除，空着，追上）<ul>
+<li>在实现中，有两个主要字段分别是write pos和check point。write pos记录当前位置，一边写一边后移，写到第3号文件末尾后就回到0号文件开头。check point是当前要擦除的位置，也是往后推移并且循环的，擦除记录前要把记录更新到数据文件。writepos和checkpoint之间空着的部分，便是可以用来记录新的操作。如果write pos追上了check point，表示已经满了，此时不能再执行更新操作，需要先擦掉一些记录，把check point前推一些。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h1><ul>
+<li><p>基本概念（server层，归档）</p>
+<ul>
+<li>binlog是MySQL的Server层的二进制日志，用于记录所有对数据库的增删改操作，叫做归档日志。</li>
+</ul>
+</li>
+<li><p>为什么有两个日志？（MyISQM无crashsafe能力，binlog只能用于归档，InnoDB引擎便使用另外日志系统redo来实现）</p>
+<ul>
+<li>因为最开始 MySQL 里并没有 InnoDB 引擎。MySQL 自带的引擎是 MyISAM，但是MyISAM 没有 crash-safe 的能力，binlog 日志只能用于归档。而 InnoDB 是另一个公司以插件形式引入 MySQL 的，既然只依靠 binlog 是没有 crash-safe 能力的，所以 InnoDB使用另外一套日志系统——也就是 redo log 来实现 crash-safe 能力。</li>
+</ul>
+</li>
+<li><p>redo log 和 binlog有什么不同？</p>
+<ol>
+<li>redo log 是 InnoDB 引擎特有的；binlog 是 MySQL 的 Server 层实现的，所有引擎都可以使用。</li>
+<li>redo log 是物理日志，记录的是“在某个数据页上做了什么修改”；binlog 是逻辑日志，记录的是这个语句的原始逻辑，比如“给 ID&#x3D;2 这一行的 c 字段加 1 ”。</li>
+<li>redo log 是循环写的，空间固定会用完；binlog 是可以追加写入的。“追加写”是指binlog 文件写到一定大小后会切换到下一个，并不会覆盖以前的日志。</li>
+</ol>
+</li>
+<li><p>执行器和InnoDB引擎在语句update T set c&#x3D;c+1 where ID&#x3D;2;中的内部流程</p>
+<ol>
+<li>执行器首先找到引擎取ID&#x3D;2这一行，ID是主键，引擎直接用树搜索找到这一行。如果ID&#x3D;2这一行所在的数据页本来就在内存中，就直接返回给执行器；否则选哟先从磁盘中读入内存，然后再返回。</li>
+<li>执行器拿到引擎给的行数据后，把这个值加上1，得到新的一行数据，再调用引擎接口写入新数据。</li>
+<li>引擎将这一行新数据更新到内存中，同时将这个更新操作记录到redo log里面，此时redo log处于prepare状态。然后告知执行器完成了，随时可以提交事务。</li>
+<li>执行器生成这个操作的binlog，并把binlog写入磁盘。</li>
+<li>执行器调用引擎的提交事务接口，引擎把刚写入的redo log改成提交（commit）状态，更新完成</li>
+</ol>
+</li>
+<li><p>为什么必须有两阶段提交？</p>
+<ul>
+<li>什么是<ul>
+<li>两阶段提交是说redo log 先 prepare，再刷新 binlog ，再 redo log commit 的过程。</li>
+</ul>
+</li>
+<li>原因<ul>
+<li>要说明这个问题，首先追溯到另一个问题：怎样让数据库恢复到半个月内任意一秒的状态？首先通过找到最近一次全量备份，并记录下备份时间点。接着从这个时间点开始将备份的binlog依次取出，重放到需要的时间点。这样临时库就和误删之前的线上库一样了，然后可以把表中的数据从临时库中取出来，按需要恢复到线上去。</li>
+<li>说完恢复过程，再回来说说为什么需要两阶段提交。这里用反证法进行解释。假设不用两阶段提交，那么要么就是先写完redo log再写完binlog，要么就是先写完binlog再写完redo log。假设先写binlog后写redo log，在写完binlog后写完redo log前，MySQL宕机了，会导致线上库并没有更新，但是binlog里面已经记录了更新日志，所以临时库和线上库会出现大量的不一致的数据。假设先写完redo log并且在写完binlog之前，MySQL宕机了，此时线上库已经更新了数据，而binlog没有这条更新日志，所以临时库会缺失大量更新导致和线上库数据不一致，而且redo log在做恢复的时候每次都需要去binlog查看该事务是否已经写入，严重影响了性能。而如果是两阶段提交，处于 commit 阶段的事务都会直接恢复，处于 prepare 阶段才需要去看 binlog。</li>
+<li>假如使用两段式提交，在MySQL宕机恢复的时候，如果发现redo log 中某个事务处于commit状态，则说明binlog一定记录了，直接恢复即可；如果redo log 某个事务处于prepare状态，则查看binlgo中是否有该事务的数据（依据全局唯一事务ID），如果有，则恢复，否则丢弃redo log的该条事务。这样从而保证redo log 和binlog 的数据一致性。</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
