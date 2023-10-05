@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>开发模板</title>
+    <url>/posts/1/</url>
+    <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
+<li>修改公告 在source&#x2F;_data&#x2F;butterfly.yml中找到并修改</li>
+<li>添加文章 在source&#x2F;_posts 下面的对应分类中copy本模板然后修改内容即可</li>
+<li>添加分类 在写文章的时候写上对应分类即可</li>
+<li>添加图片 首先添加到图床中，然后将链接放上去</li>
+<li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
+</ol>
+]]></content>
+      <categories>
+        <category>blog</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>9.25-学习计算机网络MAC层、操作系统X86架构</title>
     <url>/posts/3/</url>
     <content><![CDATA[<ol>
@@ -84,38 +116,6 @@
       </tags>
   </entry>
   <entry>
-    <title>开发模板</title>
-    <url>/posts/1/</url>
-    <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
-<li>修改公告 在source&#x2F;_data&#x2F;butterfly.yml中找到并修改</li>
-<li>添加文章 在source&#x2F;_posts 下面的对应分类中copy本模板然后修改内容即可</li>
-<li>添加分类 在写文章的时候写上对应分类即可</li>
-<li>添加图片 首先添加到图床中，然后将链接放上去</li>
-<li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
-</ol>
-]]></content>
-      <categories>
-        <category>blog</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据库-日志系统</title>
     <url>/posts/5/</url>
     <content><![CDATA[<h1 id="更新语句的执行流程？"><a href="#更新语句的执行流程？" class="headerlink" title="更新语句的执行流程？"></a>更新语句的执行流程？</h1><ul>
@@ -177,6 +177,56 @@
 <li>假如使用两段式提交，在MySQL宕机恢复的时候，如果发现redo log 中某个事务处于commit状态，则说明binlog一定记录了，直接恢复即可；如果redo log 某个事务处于prepare状态，则查看binlgo中是否有该事务的数据（依据全局唯一事务ID），如果有，则恢复，否则丢弃redo log的该条事务。这样从而保证redo log 和binlog 的数据一致性。</li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-事务隔离</title>
+    <url>/posts/7/</url>
+    <content><![CDATA[<h1 id="事务的基本概念"><a href="#事务的基本概念" class="headerlink" title="事务的基本概念"></a>事务的基本概念</h1><ul>
+<li>事务就是保证一组数据库操作，要么全部成功，要么全部失败。在MySQL中，事务支持实在引擎层实现的，其中MyISAM引擎不支持事务。</li>
+</ul>
+<h1 id="隔离性与隔离级别"><a href="#隔离性与隔离级别" class="headerlink" title="隔离性与隔离级别"></a>隔离性与隔离级别</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li>事务有4大特性ACID，分别是原子性、一致性、隔离性、持久性，隔离性便是其中之一。</li>
+<li>当数据库上有多个事务在同时执行时，可能出现脏读、不可重复读、幻读（TODO：解释这三个名词）的问题，为了解决这些问题，引出了“隔离级别”的概念。隔离得越严实，效率就会越低，因此需要在二者之间找到平衡。</li>
+<li>SQL标准的事务隔离级别包括：读未提交、读提交、可重复读和串行化。<ul>
+<li>读未提交是指其他事务能够读到一个没有提交的事务的变更。</li>
+<li>读提交是指其他事务能够读到一已提交的事务的变更。</li>
+<li>可重复读是指一个事务执行过程中读到的数据总是和事务启动时读到的一致。</li>
+<li>串行化是指对于同一行记录，写加写锁，读加读锁，多个写操作串行访问。</li>
+</ul>
+</li>
+</ul>
+<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h2><ul>
+<li>在实现上，数据库里面会创建一个视图，访问的时候以视图的逻辑为准。在“可重复读”隔离级别下，这个视图是在事务启动的时候创建的，整个事务存在期间都用这个视图。在“读提交”隔离级别下，这个视图是在每个SQL语句开始执行时创建的。需要注意的是，对于“读未提交”隔离级别，是直接返回记录的最新值，没有视图的概念。而“串行化”隔离级别下直接用加锁的方式来避免并行访问。MySQL通过设置transaction_isolation参数修改隔离级别。</li>
+</ul>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
+<li>可重复读<ul>
+<li>比如希望在进行数据分析处理的过程中，不受其他事务更新的影响，就可以用“可重复读”隔离级别。</li>
+</ul>
+</li>
+</ul>
+<h2 id="事务隔离的实现"><a href="#事务隔离的实现" class="headerlink" title="事务隔离的实现"></a>事务隔离的实现</h2><ul>
+<li>以可重复读为例子。在MySQL中实际上每条记录在更新时都会同时记录一条回滚操作，记录上的最新值可通过回滚得到前一个状态的值。同一条记录在系统中可以存在多个版本，就是数据库的多版本并发控制（MVCC）。不同的视图通过回滚操作得到。当系统里面没有比当前回滚日志更早的视图时，回滚日志就会删除。</li>
+</ul>
+<h2 id="为什么建议不要使用长事务？"><a href="#为什么建议不要使用长事务？" class="headerlink" title="为什么建议不要使用长事务？"></a>为什么建议不要使用长事务？</h2><ul>
+<li>长事务意味着系统里面存在很老的事务视图。由于这些食物随时会访问数据库里面任何数据，因此在十五提交前，数据库里面它可能用到的回滚记录都必须保留，这样会导致占用大量存储空间。并且长事务占用所资源，也可能拖垮整个库。</li>
+<li>你可以在 information_schema 库的 innodb_trx 这个表中查询长事务</li>
+</ul>
+<h2 id="事务的启动方式"><a href="#事务的启动方式" class="headerlink" title="事务的启动方式"></a>事务的启动方式</h2><ul>
+<li>MySQL的启动方式有以下几种：<ul>
+<li>1、显示启动事务语句，begin或者start transaction。配套的提交语句时commit，回滚语句时rollback。</li>
+<li>2、set autocommit&#x3D;0，这个命令会将这个线程的自动提交关掉，意味着如果你只执行一个select语句，这个事务就启动了，而且并不会自动提交。这个事务持续存在直到你主动执行commit或者rollback语句，或者断开连接。</li>
+<li>在 autocommit 为 1 的情况下，用 begin 显式启动的事务，如果执行 commit 则提交事务。如果执行 commit work and chain，则是提交事务并自动启动下一个事务，这样也省去了再次执行 begin 语句的开销。同时带来的好处是从程序开发的角度明确地知道每个语句是否处于事务中。</li>
 </ul>
 </li>
 </ul>
