@@ -84,6 +84,38 @@
       </tags>
   </entry>
   <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>操作系统-molloc和零拷贝相关</title>
+    <url>/posts/1/</url>
+    <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
+<li>修改公告 在source&#x2F;_data&#x2F;butterfly.yml中找到并修改</li>
+<li>添加文章 在source&#x2F;_posts 下面的对应分类中copy本模板然后修改内容即可</li>
+<li>添加分类 在写文章的时候写上对应分类即可</li>
+<li>添加图片 首先添加到图床中，然后将链接放上去</li>
+<li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
+</ol>
+]]></content>
+      <categories>
+        <category>blog</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库-串联一致性读、当前读、行锁：事务是隔离的还是不隔离的【事务、锁】</title>
     <url>/posts/9/</url>
     <content><![CDATA[<h1 id="视图的两个概念"><a href="#视图的两个概念" class="headerlink" title="视图的两个概念"></a>视图的两个概念</h1><ul>
@@ -120,66 +152,6 @@
         <tag>事务</tag>
         <tag>锁</tag>
         <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>操作系统-molloc和零拷贝相关</title>
-    <url>/posts/1/</url>
-    <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
-<li>修改公告 在source&#x2F;_data&#x2F;butterfly.yml中找到并修改</li>
-<li>添加文章 在source&#x2F;_posts 下面的对应分类中copy本模板然后修改内容即可</li>
-<li>添加分类 在写文章的时候写上对应分类即可</li>
-<li>添加图片 首先添加到图床中，然后将链接放上去</li>
-<li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
-</ol>
-]]></content>
-      <categories>
-        <category>blog</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>开发模板</title>
-    <url>/posts/12/</url>
-    <content><![CDATA[<h1 id="molloc"><a href="#molloc" class="headerlink" title="molloc"></a>molloc</h1><ul>
-<li>molloc有两种实现方式，brk和mmap。当申请内存小于128kb时使用brk，大于则使用mmap。brk申请的空间在free释放时不会真的释放，而是会放回内存池；它的好处是可以一次分配更大内存，避免频繁申请内存带来的切换开销；但是会产生内存碎片</li>
-<li>mmap申请的内存空间在free时会归还给系统。但是每次mmap申请的内存第一次访问都需要触发缺页中断；并且需要进入内核，要频繁的状态切换。mmap的原理时直接将虚拟地址与内核缓冲区地址进行映射，避免内核缓冲区到用户缓冲区的copy</li>
-</ul>
-<h1 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h1><ul>
-<li>零拷贝是说不需要CPU将数据拷贝到另一个区域。</li>
-<li>首先是DMA代替CPU将数据从磁盘缓冲区调入内核缓冲区。</li>
-<li>由于数据加工都是在内核空间完成的，因此也不需要将数据从内核缓冲区拷贝到用户缓冲区。这一步有两种方法<ul>
-<li>第一种是使用mmap+write。用mmap代替read，避免copy，此时仍然需要4次状态切换以及一次缓冲区到socket的拷贝</li>
-<li>第二种是使用sendfile。用sendfile代替read和write，这样只需要两次状态切换。同时缓冲区直接通过SGDMA传到网卡，实现真正的零拷贝</li>
-</ul>
-</li>
-</ul>
-<h1 id="如何实现大文件传输"><a href="#如何实现大文件传输" class="headerlink" title="如何实现大文件传输"></a>如何实现大文件传输</h1><ul>
-<li>针对大文件传输，不能使用零拷贝，因为pagecache不会起作用，导致其他小文件无法享用pagecache，在高并发场景下会造成严重性能问题。因此采用异步IO，绕过pagecache，同时避免read的阻塞问题。<br><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240112223858.jpg"></li>
-</ul>
-]]></content>
-      <categories>
-        <category>操作系统</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>
@@ -228,8 +200,110 @@
         <category>MySQL</category>
       </categories>
       <tags>
-        <tag>MySQL</tag>
         <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>开发模板</title>
+    <url>/posts/12/</url>
+    <content><![CDATA[<h1 id="molloc"><a href="#molloc" class="headerlink" title="molloc"></a>molloc</h1><ul>
+<li>molloc有两种实现方式，brk和mmap。当申请内存小于128kb时使用brk，大于则使用mmap。brk申请的空间在free释放时不会真的释放，而是会放回内存池；它的好处是可以一次分配更大内存，避免频繁申请内存带来的切换开销；但是会产生内存碎片</li>
+<li>mmap申请的内存空间在free时会归还给系统。但是每次mmap申请的内存第一次访问都需要触发缺页中断；并且需要进入内核，要频繁的状态切换。mmap的原理时直接将虚拟地址与内核缓冲区地址进行映射，避免内核缓冲区到用户缓冲区的copy</li>
+</ul>
+<h1 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h1><ul>
+<li>零拷贝是说不需要CPU将数据拷贝到另一个区域。</li>
+<li>首先是DMA代替CPU将数据从磁盘缓冲区调入内核缓冲区。</li>
+<li>由于数据加工都是在内核空间完成的，因此也不需要将数据从内核缓冲区拷贝到用户缓冲区。这一步有两种方法<ul>
+<li>第一种是使用mmap+write。用mmap代替read，避免copy，此时仍然需要4次状态切换以及一次缓冲区到socket的拷贝</li>
+<li>第二种是使用sendfile。用sendfile代替read和write，这样只需要两次状态切换。同时缓冲区直接通过SGDMA传到网卡，实现真正的零拷贝</li>
+</ul>
+</li>
+</ul>
+<h1 id="如何实现大文件传输"><a href="#如何实现大文件传输" class="headerlink" title="如何实现大文件传输"></a>如何实现大文件传输</h1><ul>
+<li>针对大文件传输，不能使用零拷贝，因为pagecache不会起作用，导致其他小文件无法享用pagecache，在高并发场景下会造成严重性能问题。因此采用异步IO，绕过pagecache，同时避免read的阻塞问题。<br><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240112223858.jpg"></li>
+</ul>
+]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-日志系统</title>
+    <url>/posts/5/</url>
+    <content><![CDATA[<h1 id="更新语句的执行流程？"><a href="#更新语句的执行流程？" class="headerlink" title="更新语句的执行流程？"></a>更新语句的执行流程？</h1><ul>
+<li>和查询流程不同的是，更新语句还要涉及两个重要的日志模块，分别是redo log（重做日志）和binlog（归档日志）。</li>
+</ul>
+<h1 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h1><ul>
+<li>问题提出<ul>
+<li>加入对于MySQL的每次更新操作都要写进磁盘，然后磁盘也得找到对应的那条记录，然后才能更新，整个过程的IO、查询成本太高。</li>
+</ul>
+</li>
+<li>解决方案（WAL）<ul>
+<li>基本概念（写日志，更新，跟新，固定，循环，crashsafe）<ul>
+<li>为了解决这个问题，MySQL使用到了WAL技术，全称Write-Ahead Logging。它的关键点是先写日志，再写磁盘。具体来说，当有一条记录需要更新时，InnoDB引擎会先把记录写到redo log里面，并且更新内存，这时候更新操作就算完成了。同时InnoDB会再实弹的时候将这个操作记录更新到磁盘里面。InnoDB的redo log是固定大小的，比如可以配置为一组4个文件，一个文件1GB，总共4GB，写入时，从头开始，写到末尾就回到开头，循环写。有了redo log，InnoDB就可以保证即使数据库发生异常重启，之前提交的记录也不会丢失，该能力称为crash-safe。redo log是InnoDB引擎特有的日志。</li>
+</ul>
+</li>
+<li>redo log实现机制（write 位置，后移，循环，check 擦除，空着，追上）<ul>
+<li>在实现中，有两个主要字段分别是write pos和check point。write pos记录当前位置，一边写一边后移，写到第3号文件末尾后就回到0号文件开头。check point是当前要擦除的位置，也是往后推移并且循环的，擦除记录前要把记录更新到数据文件。writepos和checkpoint之间空着的部分，便是可以用来记录新的操作。如果write pos追上了check point，表示已经满了，此时不能再执行更新操作，需要先擦掉一些记录，把check point前推一些。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h1><ul>
+<li><p>基本概念（server层，归档）</p>
+<ul>
+<li>binlog是MySQL的Server层的二进制日志，用于记录所有对数据库的增删改操作，叫做归档日志。</li>
+</ul>
+</li>
+<li><p>为什么有两个日志？（MyISQM无crashsafe能力，binlog只能用于归档，InnoDB引擎便使用另外日志系统redo来实现）</p>
+<ul>
+<li>因为最开始 MySQL 里并没有 InnoDB 引擎。MySQL 自带的引擎是 MyISAM，但是MyISAM 没有 crash-safe 的能力，binlog 日志只能用于归档。而 InnoDB 是另一个公司以插件形式引入 MySQL 的，既然只依靠 binlog 是没有 crash-safe 能力的，所以 InnoDB使用另外一套日志系统——也就是 redo log 来实现 crash-safe 能力。</li>
+</ul>
+</li>
+<li><p>redo log 和 binlog有什么不同？</p>
+<ol>
+<li>redo log 是 InnoDB 引擎特有的；binlog 是 MySQL 的 Server 层实现的，所有引擎都可以使用。</li>
+<li>redo log 是物理日志，记录的是“在某个数据页上做了什么修改”；binlog 是逻辑日志，记录的是这个语句的原始逻辑，比如“给 ID&#x3D;2 这一行的 c 字段加 1 ”。</li>
+<li>redo log 是循环写的，空间固定会用完；binlog 是可以追加写入的。“追加写”是指binlog 文件写到一定大小后会切换到下一个，并不会覆盖以前的日志。</li>
+</ol>
+</li>
+<li><p>执行器和InnoDB引擎在语句update T set c&#x3D;c+1 where ID&#x3D;2;中的内部流程</p>
+<ol>
+<li>执行器首先找到引擎取ID&#x3D;2这一行，ID是主键，引擎直接用树搜索找到这一行。如果ID&#x3D;2这一行所在的数据页本来就在内存中，就直接返回给执行器；否则选哟先从磁盘中读入内存，然后再返回。</li>
+<li>执行器拿到引擎给的行数据后，把这个值加上1，得到新的一行数据，再调用引擎接口写入新数据。</li>
+<li>引擎将这一行新数据更新到内存中，同时将这个更新操作记录到redo log里面，此时redo log处于prepare状态。然后告知执行器完成了，随时可以提交事务。</li>
+<li>执行器生成这个操作的binlog，并把binlog写入磁盘。</li>
+<li>执行器调用引擎的提交事务接口，引擎把刚写入的redo log改成提交（commit）状态，更新完成</li>
+</ol>
+</li>
+<li><p>为什么必须有两阶段提交？</p>
+<ul>
+<li>什么是<ul>
+<li>两阶段提交是说redo log 先 prepare，再刷新 binlog ，再 redo log commit 的过程。</li>
+</ul>
+</li>
+<li>原因<ul>
+<li>要说明这个问题，首先追溯到另一个问题：怎样让数据库恢复到半个月内任意一秒的状态？首先通过找到最近一次全量备份，并记录下备份时间点。接着从这个时间点开始将备份的binlog依次取出，重放到需要的时间点。这样临时库就和误删之前的线上库一样了，然后可以把表中的数据从临时库中取出来，按需要恢复到线上去。</li>
+<li>说完恢复过程，再回来说说为什么需要两阶段提交。这里用反证法进行解释。假设不用两阶段提交，那么要么就是先写完redo log再写完binlog，要么就是先写完binlog再写完redo log。假设先写binlog后写redo log，在写完binlog后写完redo log前，MySQL宕机了，会导致线上库并没有更新，但是binlog里面已经记录了更新日志，所以临时库和线上库会出现大量的不一致的数据。假设先写完redo log并且在写完binlog之前，MySQL宕机了，此时线上库已经更新了数据，而binlog没有这条更新日志，所以临时库会缺失大量更新导致和线上库数据不一致，而且redo log在做恢复的时候每次都需要去binlog查看该事务是否已经写入，严重影响了性能。而如果是两阶段提交，处于 commit 阶段的事务都会直接恢复，处于 prepare 阶段才需要去看 binlog。</li>
+<li>假如使用两段式提交，在MySQL宕机恢复的时候，如果发现redo log 中某个事务处于commit状态，则说明binlog一定记录了，直接恢复即可；如果redo log 某个事务处于prepare状态，则查看binlgo中是否有该事务的数据（依据全局唯一事务ID），如果有，则恢复，否则丢弃redo log的该条事务。这样从而保证redo log 和binlog 的数据一致性。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
       </tags>
   </entry>
   <entry>
@@ -258,8 +332,119 @@
         <category>MySQL</category>
       </categories>
       <tags>
-        <tag>MySQL</tag>
         <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-基本架构</title>
+    <url>/posts/4/</url>
+    <content><![CDATA[<h1 id="大体上MySQL可以分为Server层和引擎层两个部分"><a href="#大体上MySQL可以分为Server层和引擎层两个部分" class="headerlink" title="大体上MySQL可以分为Server层和引擎层两个部分"></a>大体上MySQL可以分为Server层和引擎层两个部分</h1><h1 id="Server层"><a href="#Server层" class="headerlink" title="Server层"></a>Server层</h1><ul>
+<li><p>Server层包括连接器、查询缓存、分析器、优化器、执行器，涵盖MySQL的大多数核心服务功能，以及所有的内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。</p>
+<h1 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h1><ul>
+<li>基本概念<ul>
+<li>当客户端连接到数据库上的时候，首先接待的便是连接器，连接器负责跟客户端建立连接，获取权限，维持和管理连接。</li>
+</ul>
+</li>
+<li>连接流程<ul>
+<li>连接的命令如下<code>-h$ip -p$port -u$user -p</code> 接着输入密码。完成TCP握手后连接器就会开始身份认证。如果用户或者密码不对就会报<code>Access denied for user</code>错误，客户端结束运行。如果认证通过，接下来连接器会到权限表里面获取当前用户的所有权限。之后该连接的所有权限判断都依据当前获取的权限，意味着即使权限被修改了，也需要重新连接才能使用新的权限。</li>
+<li>完成连接后，如果没有操作该连接便会进入空闲状态，可在show processlist里面查看连接的状态。如果连接超过wait_timeout时间没有动作，默认是8小时，则会将连接断开，如果此时再发起请求将会报<code>Lost connection to MySQL server during query</code>错误。</li>
+</ul>
+</li>
+<li>长连接与短链接<ul>
+<li>基本概念<ul>
+<li>长连接是指如果客户端一直有请求则一直使用该连接。短连接是指每次执行过很少请求后就断开连接，下次查询再重新连接。由于连接过程复杂，所以推荐使用长连接。</li>
+</ul>
+</li>
+<li>长连接的问题与解决方案<ul>
+<li>问题提出<ul>
+<li>MySQL执行过程中使用的内存是在连接内部的，这些资源会在连接断开的时候才释放。如果使用长连接，积累过多了会导致内存暴涨，这个时候系统会强行kill连接，表现出来就是MySQL异常重启了。</li>
+</ul>
+</li>
+<li>解决方案<ul>
+<li>一个是定期断开长连接，或者执行了一个占用内存大的查询后，断开连接并重连。</li>
+<li>另一个是5.7版本后可以使用<code>mysql_reset_connection</code>重新初始化连接资源,不用断开连接。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="查询缓存"><a href="#查询缓存" class="headerlink" title="查询缓存"></a>查询缓存</h1><ul>
+<li>基本概念<ul>
+<li>建立连接后执行逻辑会来到查询缓存。MySQL 拿到一个查询请求后，会先到查询缓存看看，之前是不是执行过这条语句。之前执行过的语句及其结果可能会以 key-value 对的形式，被直接缓存在内存中。key 是查询的语句，value 是查询的结果。如果你的查询能够直接在这个缓存中找到 key，那么这个value 就会被直接返回给客户端。如果语句不在查询缓存中，就会继续后面的执行阶段。执行完成后，执行结果会被存入查询缓存中。但是查询缓存的失效非常频繁，只要有对一个表的更新，这个表上所有的查询缓存都会被清空。对于更新压力大的数据库来说，查询缓存的命中率会非常低。除非你的业务就是有一张静态表，很长时间才会更新一次。比如，一个系统配置表，那这张表上的查询才适合使用查询缓存。</li>
+</ul>
+</li>
+<li>按需使用<ul>
+<li>MySQL 提供了“按需使用”的方式。你可以将参数 query_cache_type 设置成 DEMAND，这样对于默认的 SQL 语句都不使用查询缓存。而对于你确定要使用查询缓存的语句，可以用 SQL_CACHE 显式指定，像下面这个语句一样：mysql&gt; select SQL_CACHE * from T where ID&#x3D;10；</li>
+<li>MySQL 8.0 版本直接将查询缓存的整块功能删掉了。</li>
+</ul>
+</li>
+</ul>
+<h1 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h1><ul>
+<li>基本概念<ul>
+<li>如果没有命中查询缓存，则接下来要开始真正执行语句了。首先MySQL需要知道你要做什么，因此需要对SQL语句做解析。</li>
+</ul>
+</li>
+<li>语句解析分为了词法分析和语法分析<ul>
+<li>词法分析<ul>
+<li>分析的是SQL语句的字符串中分别是什么，代表什么。比如select就标识为查询语句，ID识别为列ID等</li>
+</ul>
+</li>
+<li>语法分析<ul>
+<li>是用来判断SQL语句是否满足MySQL语法，如果不满足则报You have an error in your SQL syntax错误</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h1><ul>
+<li>在开始执行前，还要经过优化器处理。优化器是在表里面有多个索引的时候，决定使用哪个索引，或者在一个语句有多个表关联（join）时，决定各表的连接顺序，这些都会导致执行效率的不同。</li>
+</ul>
+<h1 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h1><ul>
+<li>接下来就是进入执行器阶段，开始执行语句。</li>
+<li>基本流程<ul>
+<li>开始执行的时候，要先判断一下你对这个表 T 有没有执行查询的权限，如果没有，就会返回没有权限的错误。如果有权限，就打开表继续执行。打开表的时候，执行器就会根据表的引擎定义，去使用这个引擎提供的接口。</li>
+<li>比如我们要查询表 T 中ID为10的数据，并且ID 字段没有索引，那么执行器的执行流程是这样的：1. 调用 InnoDB 引擎接口取这个表的第一行，判断 ID 值是不是 10，如果不是则跳过，如果是则将这行存在结果集中；2. 调用引擎接口取“下一行”，重复相同的判断逻辑，直到取到这个表的最后一行。3. 执行器将上述遍历过程中所有满足条件的行组成的记录集作为结果集返回给客户端。</li>
+<li>对于有索引的表，执行的逻辑也差不多。第一次调用的是“取满足条件的第一行”这个接口，之后循环取“满足条件的下一行”这个接口，这些接口都是引擎中已经定义好的。</li>
+<li>在数据库的慢查询日志中看到一个 rows_examined 的字段，表示这个语句执行过程中扫描了多少行。这个值就是在执行器每次调用引擎获取数据行的时候累加的。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h1><ul>
+<li>什么是存储引擎？<ul>
+<li>存储引擎层负责数据的存储和提取，直接与磁盘交互部分。页是存储引擎读写数据的最小单位，一个页里可以有一条或多条表记录。其架构模式是插件式的，支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.5.5 版本开始成为了默认存储引擎，而 InnoDB 是 MySQL 中唯一能够完整支持事务特性的存储引擎。你执行 create table 建表的时候，如果不指定引擎类型，默认使用的就是InnoDB。不过，你也可以通过指定存储引擎的类型来选择别的引擎，比如在 create table语句中使用 engine&#x3D;memory, 来指定使用内存引擎创建表。</li>
+</ul>
+</li>
+<li>什么是随机 IO 和顺序 IO？<ul>
+<li>磁盘读写数据的两种方式。随机 IO 需要先找到地址，再读写数据，每次拿到的地址都是随机的。而顺序 IO，由于地址是连贯的，找到地址后，一次可以读写许多数据，效率比较高。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设计模式——策略模式</title>
+    <url>/posts/13/</url>
+    <content><![CDATA[<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 策略接口</span></span><br><span class="line"><span class="keyword">type</span> PaymentStrategy <span class="keyword">interface</span> &#123;</span><br><span class="line">	Pay(amount <span class="type">float64</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：支付宝支付</span></span><br><span class="line"><span class="keyword">type</span> AlipayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *AlipayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;支付宝支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：微信支付</span></span><br><span class="line"><span class="keyword">type</span> WeChatPayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *WeChatPayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;微信支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 环境类</span></span><br><span class="line"><span class="keyword">type</span> PaymentContext <span class="keyword">struct</span> &#123;</span><br><span class="line">	strategy PaymentStrategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> SetStrategy(strategy PaymentStrategy) &#123;</span><br><span class="line">	c.strategy = strategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	c.strategy.Pay(amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建环境对象</span></span><br><span class="line">	context := &amp;PaymentContext&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置支付宝支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;AlipayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">100.0</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置微信支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;WeChatPayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">200.0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>go-zero</category>
+      </categories>
+      <tags>
+        <tag>go-zero</tag>
+        <tag>设计模式</tag>
       </tags>
   </entry>
   <entry>
@@ -425,8 +610,65 @@
         <category>MySQL</category>
       </categories>
       <tags>
-        <tag>MySQL</tag>
         <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库：说一说InnoDB刷脏页</title>
+    <url>/posts/6/</url>
+    <content><![CDATA[<h1 id="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"><a href="#为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）" class="headerlink" title="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"></a>为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）</h1><h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><ul>
+<li>可能是在刷脏页（flush）（脏页即当内存数据页跟磁盘数据页内容不一致的时候，称这个内存页为脏页。）<ul>
+<li>第一种情况是redo log写满了。这时候系统会停止所有更新操作，把checkpoint往前推进，并且刷脏页，redo log留出空间可以继续写。</li>
+<li>第二种情况就是系统内存不足。这时候会要淘汰一些数据页，如果淘汰的是“脏页”，需要先将脏页写入磁盘。<ul>
+<li>InnoDB缓冲池中的内存页的三种状态<ul>
+<li>还没使用的</li>
+<li>使用了的干净页</li>
+<li>使用了的脏页</li>
+</ul>
+</li>
+<li>申请数据页<ul>
+<li>当要读入的数据页没有在内存的时候，就必须到缓冲池中申请一个数据页。这时候得把最久不使用的数据页从内存中淘汰掉。当淘汰的是脏页的时候就得先刷脏页，出现以下两种情况便会影响性能<ul>
+<li>一个查询要淘汰的脏页个数太多，导致这个查询的响应时间明显变长。</li>
+<li>日志写满了，更新全堵住，写性能跌为0。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第三种情况是MySQL认为系统处于“空闲”状态，会进行刷脏页，但既然都是空闲了，不太可能影响性能</li>
+<li>第四种情况是MySQL正常关闭的情况，也会刷脏页。正常关闭了，也不会影响性能。</li>
+</ul>
+<h1 id="InnoDB刷脏页的控制策略"><a href="#InnoDB刷脏页的控制策略" class="headerlink" title="InnoDB刷脏页的控制策略"></a>InnoDB刷脏页的控制策略</h1><ul>
+<li>为什么需要<ul>
+<li>InnoDB需要有控制脏页比例的机制，来尽量避免一次性淘汰的脏页过多或者日志写满影响读写性能。</li>
+<li>刷脏页具体机制以及这些策略相关的参数<ul>
+<li>首先通过设置innodb_io_capacity告诉InnoDB磁盘读写能力，通常设置成磁盘的IOPS，可通过fio工具测试，得到InnoDB最大刷脏页速度。</li>
+<li>InnoDB通过全力的百分比来刷脏页<ul>
+<li>InnoDB会先根据脏页占整个缓存池的比例以及redo log写盘速度两个因素算出两个值。<ul>
+<li>参数innodb_maxdirty_pages_pct是脏页的比例上限，默认75%。</li>
+<li>第一个值是依据脏页占缓存池的比例算出来的</li>
+<li>第二个值是根据redo log中write pos和checkpoint的差值计算出来的</li>
+<li>最后按照最大刷脏页速度 * max（f1，f2）%的速度刷脏页</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
       </tags>
   </entry>
   <entry>
@@ -496,234 +738,6 @@
       <tags>
         <tag>blog</tag>
         <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库-日志系统</title>
-    <url>/posts/5/</url>
-    <content><![CDATA[<h1 id="更新语句的执行流程？"><a href="#更新语句的执行流程？" class="headerlink" title="更新语句的执行流程？"></a>更新语句的执行流程？</h1><ul>
-<li>和查询流程不同的是，更新语句还要涉及两个重要的日志模块，分别是redo log（重做日志）和binlog（归档日志）。</li>
-</ul>
-<h1 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h1><ul>
-<li>问题提出<ul>
-<li>加入对于MySQL的每次更新操作都要写进磁盘，然后磁盘也得找到对应的那条记录，然后才能更新，整个过程的IO、查询成本太高。</li>
-</ul>
-</li>
-<li>解决方案（WAL）<ul>
-<li>基本概念（写日志，更新，跟新，固定，循环，crashsafe）<ul>
-<li>为了解决这个问题，MySQL使用到了WAL技术，全称Write-Ahead Logging。它的关键点是先写日志，再写磁盘。具体来说，当有一条记录需要更新时，InnoDB引擎会先把记录写到redo log里面，并且更新内存，这时候更新操作就算完成了。同时InnoDB会再实弹的时候将这个操作记录更新到磁盘里面。InnoDB的redo log是固定大小的，比如可以配置为一组4个文件，一个文件1GB，总共4GB，写入时，从头开始，写到末尾就回到开头，循环写。有了redo log，InnoDB就可以保证即使数据库发生异常重启，之前提交的记录也不会丢失，该能力称为crash-safe。redo log是InnoDB引擎特有的日志。</li>
-</ul>
-</li>
-<li>redo log实现机制（write 位置，后移，循环，check 擦除，空着，追上）<ul>
-<li>在实现中，有两个主要字段分别是write pos和check point。write pos记录当前位置，一边写一边后移，写到第3号文件末尾后就回到0号文件开头。check point是当前要擦除的位置，也是往后推移并且循环的，擦除记录前要把记录更新到数据文件。writepos和checkpoint之间空着的部分，便是可以用来记录新的操作。如果write pos追上了check point，表示已经满了，此时不能再执行更新操作，需要先擦掉一些记录，把check point前推一些。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h1><ul>
-<li><p>基本概念（server层，归档）</p>
-<ul>
-<li>binlog是MySQL的Server层的二进制日志，用于记录所有对数据库的增删改操作，叫做归档日志。</li>
-</ul>
-</li>
-<li><p>为什么有两个日志？（MyISQM无crashsafe能力，binlog只能用于归档，InnoDB引擎便使用另外日志系统redo来实现）</p>
-<ul>
-<li>因为最开始 MySQL 里并没有 InnoDB 引擎。MySQL 自带的引擎是 MyISAM，但是MyISAM 没有 crash-safe 的能力，binlog 日志只能用于归档。而 InnoDB 是另一个公司以插件形式引入 MySQL 的，既然只依靠 binlog 是没有 crash-safe 能力的，所以 InnoDB使用另外一套日志系统——也就是 redo log 来实现 crash-safe 能力。</li>
-</ul>
-</li>
-<li><p>redo log 和 binlog有什么不同？</p>
-<ol>
-<li>redo log 是 InnoDB 引擎特有的；binlog 是 MySQL 的 Server 层实现的，所有引擎都可以使用。</li>
-<li>redo log 是物理日志，记录的是“在某个数据页上做了什么修改”；binlog 是逻辑日志，记录的是这个语句的原始逻辑，比如“给 ID&#x3D;2 这一行的 c 字段加 1 ”。</li>
-<li>redo log 是循环写的，空间固定会用完；binlog 是可以追加写入的。“追加写”是指binlog 文件写到一定大小后会切换到下一个，并不会覆盖以前的日志。</li>
-</ol>
-</li>
-<li><p>执行器和InnoDB引擎在语句update T set c&#x3D;c+1 where ID&#x3D;2;中的内部流程</p>
-<ol>
-<li>执行器首先找到引擎取ID&#x3D;2这一行，ID是主键，引擎直接用树搜索找到这一行。如果ID&#x3D;2这一行所在的数据页本来就在内存中，就直接返回给执行器；否则选哟先从磁盘中读入内存，然后再返回。</li>
-<li>执行器拿到引擎给的行数据后，把这个值加上1，得到新的一行数据，再调用引擎接口写入新数据。</li>
-<li>引擎将这一行新数据更新到内存中，同时将这个更新操作记录到redo log里面，此时redo log处于prepare状态。然后告知执行器完成了，随时可以提交事务。</li>
-<li>执行器生成这个操作的binlog，并把binlog写入磁盘。</li>
-<li>执行器调用引擎的提交事务接口，引擎把刚写入的redo log改成提交（commit）状态，更新完成</li>
-</ol>
-</li>
-<li><p>为什么必须有两阶段提交？</p>
-<ul>
-<li>什么是<ul>
-<li>两阶段提交是说redo log 先 prepare，再刷新 binlog ，再 redo log commit 的过程。</li>
-</ul>
-</li>
-<li>原因<ul>
-<li>要说明这个问题，首先追溯到另一个问题：怎样让数据库恢复到半个月内任意一秒的状态？首先通过找到最近一次全量备份，并记录下备份时间点。接着从这个时间点开始将备份的binlog依次取出，重放到需要的时间点。这样临时库就和误删之前的线上库一样了，然后可以把表中的数据从临时库中取出来，按需要恢复到线上去。</li>
-<li>说完恢复过程，再回来说说为什么需要两阶段提交。这里用反证法进行解释。假设不用两阶段提交，那么要么就是先写完redo log再写完binlog，要么就是先写完binlog再写完redo log。假设先写binlog后写redo log，在写完binlog后写完redo log前，MySQL宕机了，会导致线上库并没有更新，但是binlog里面已经记录了更新日志，所以临时库和线上库会出现大量的不一致的数据。假设先写完redo log并且在写完binlog之前，MySQL宕机了，此时线上库已经更新了数据，而binlog没有这条更新日志，所以临时库会缺失大量更新导致和线上库数据不一致，而且redo log在做恢复的时候每次都需要去binlog查看该事务是否已经写入，严重影响了性能。而如果是两阶段提交，处于 commit 阶段的事务都会直接恢复，处于 prepare 阶段才需要去看 binlog。</li>
-<li>假如使用两段式提交，在MySQL宕机恢复的时候，如果发现redo log 中某个事务处于commit状态，则说明binlog一定记录了，直接恢复即可；如果redo log 某个事务处于prepare状态，则查看binlgo中是否有该事务的数据（依据全局唯一事务ID），如果有，则恢复，否则丢弃redo log的该条事务。这样从而保证redo log 和binlog 的数据一致性。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-        <tag>总结</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库：说一说InnoDB刷脏页</title>
-    <url>/posts/6/</url>
-    <content><![CDATA[<h1 id="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"><a href="#为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）" class="headerlink" title="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"></a>为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）</h1><h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><ul>
-<li>可能是在刷脏页（flush）（脏页即当内存数据页跟磁盘数据页内容不一致的时候，称这个内存页为脏页。）<ul>
-<li>第一种情况是redo log写满了。这时候系统会停止所有更新操作，把checkpoint往前推进，并且刷脏页，redo log留出空间可以继续写。</li>
-<li>第二种情况就是系统内存不足。这时候会要淘汰一些数据页，如果淘汰的是“脏页”，需要先将脏页写入磁盘。<ul>
-<li>InnoDB缓冲池中的内存页的三种状态<ul>
-<li>还没使用的</li>
-<li>使用了的干净页</li>
-<li>使用了的脏页</li>
-</ul>
-</li>
-<li>申请数据页<ul>
-<li>当要读入的数据页没有在内存的时候，就必须到缓冲池中申请一个数据页。这时候得把最久不使用的数据页从内存中淘汰掉。当淘汰的是脏页的时候就得先刷脏页，出现以下两种情况便会影响性能<ul>
-<li>一个查询要淘汰的脏页个数太多，导致这个查询的响应时间明显变长。</li>
-<li>日志写满了，更新全堵住，写性能跌为0。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>第三种情况是MySQL认为系统处于“空闲”状态，会进行刷脏页，但既然都是空闲了，不太可能影响性能</li>
-<li>第四种情况是MySQL正常关闭的情况，也会刷脏页。正常关闭了，也不会影响性能。</li>
-</ul>
-<h1 id="InnoDB刷脏页的控制策略"><a href="#InnoDB刷脏页的控制策略" class="headerlink" title="InnoDB刷脏页的控制策略"></a>InnoDB刷脏页的控制策略</h1><ul>
-<li>为什么需要<ul>
-<li>InnoDB需要有控制脏页比例的机制，来尽量避免一次性淘汰的脏页过多或者日志写满影响读写性能。</li>
-<li>刷脏页具体机制以及这些策略相关的参数<ul>
-<li>首先通过设置innodb_io_capacity告诉InnoDB磁盘读写能力，通常设置成磁盘的IOPS，可通过fio工具测试，得到InnoDB最大刷脏页速度。</li>
-<li>InnoDB通过全力的百分比来刷脏页<ul>
-<li>InnoDB会先根据脏页占整个缓存池的比例以及redo log写盘速度两个因素算出两个值。<ul>
-<li>参数innodb_maxdirty_pages_pct是脏页的比例上限，默认75%。</li>
-<li>第一个值是依据脏页占缓存池的比例算出来的</li>
-<li>第二个值是根据redo log中write pos和checkpoint的差值计算出来的</li>
-<li>最后按照最大刷脏页速度 * max（f1，f2）%的速度刷脏页</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-        <tag>总结</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库-基本架构</title>
-    <url>/posts/4/</url>
-    <content><![CDATA[<h1 id="大体上MySQL可以分为Server层和引擎层两个部分"><a href="#大体上MySQL可以分为Server层和引擎层两个部分" class="headerlink" title="大体上MySQL可以分为Server层和引擎层两个部分"></a>大体上MySQL可以分为Server层和引擎层两个部分</h1><h1 id="Server层"><a href="#Server层" class="headerlink" title="Server层"></a>Server层</h1><ul>
-<li><p>Server层包括连接器、查询缓存、分析器、优化器、执行器，涵盖MySQL的大多数核心服务功能，以及所有的内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。</p>
-<h1 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h1><ul>
-<li>基本概念<ul>
-<li>当客户端连接到数据库上的时候，首先接待的便是连接器，连接器负责跟客户端建立连接，获取权限，维持和管理连接。</li>
-</ul>
-</li>
-<li>连接流程<ul>
-<li>连接的命令如下<code>-h$ip -p$port -u$user -p</code> 接着输入密码。完成TCP握手后连接器就会开始身份认证。如果用户或者密码不对就会报<code>Access denied for user</code>错误，客户端结束运行。如果认证通过，接下来连接器会到权限表里面获取当前用户的所有权限。之后该连接的所有权限判断都依据当前获取的权限，意味着即使权限被修改了，也需要重新连接才能使用新的权限。</li>
-<li>完成连接后，如果没有操作该连接便会进入空闲状态，可在show processlist里面查看连接的状态。如果连接超过wait_timeout时间没有动作，默认是8小时，则会将连接断开，如果此时再发起请求将会报<code>Lost connection to MySQL server during query</code>错误。</li>
-</ul>
-</li>
-<li>长连接与短链接<ul>
-<li>基本概念<ul>
-<li>长连接是指如果客户端一直有请求则一直使用该连接。短连接是指每次执行过很少请求后就断开连接，下次查询再重新连接。由于连接过程复杂，所以推荐使用长连接。</li>
-</ul>
-</li>
-<li>长连接的问题与解决方案<ul>
-<li>问题提出<ul>
-<li>MySQL执行过程中使用的内存是在连接内部的，这些资源会在连接断开的时候才释放。如果使用长连接，积累过多了会导致内存暴涨，这个时候系统会强行kill连接，表现出来就是MySQL异常重启了。</li>
-</ul>
-</li>
-<li>解决方案<ul>
-<li>一个是定期断开长连接，或者执行了一个占用内存大的查询后，断开连接并重连。</li>
-<li>另一个是5.7版本后可以使用<code>mysql_reset_connection</code>重新初始化连接资源,不用断开连接。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="查询缓存"><a href="#查询缓存" class="headerlink" title="查询缓存"></a>查询缓存</h1><ul>
-<li>基本概念<ul>
-<li>建立连接后执行逻辑会来到查询缓存。MySQL 拿到一个查询请求后，会先到查询缓存看看，之前是不是执行过这条语句。之前执行过的语句及其结果可能会以 key-value 对的形式，被直接缓存在内存中。key 是查询的语句，value 是查询的结果。如果你的查询能够直接在这个缓存中找到 key，那么这个value 就会被直接返回给客户端。如果语句不在查询缓存中，就会继续后面的执行阶段。执行完成后，执行结果会被存入查询缓存中。但是查询缓存的失效非常频繁，只要有对一个表的更新，这个表上所有的查询缓存都会被清空。对于更新压力大的数据库来说，查询缓存的命中率会非常低。除非你的业务就是有一张静态表，很长时间才会更新一次。比如，一个系统配置表，那这张表上的查询才适合使用查询缓存。</li>
-</ul>
-</li>
-<li>按需使用<ul>
-<li>MySQL 提供了“按需使用”的方式。你可以将参数 query_cache_type 设置成 DEMAND，这样对于默认的 SQL 语句都不使用查询缓存。而对于你确定要使用查询缓存的语句，可以用 SQL_CACHE 显式指定，像下面这个语句一样：mysql&gt; select SQL_CACHE * from T where ID&#x3D;10；</li>
-<li>MySQL 8.0 版本直接将查询缓存的整块功能删掉了。</li>
-</ul>
-</li>
-</ul>
-<h1 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h1><ul>
-<li>基本概念<ul>
-<li>如果没有命中查询缓存，则接下来要开始真正执行语句了。首先MySQL需要知道你要做什么，因此需要对SQL语句做解析。</li>
-</ul>
-</li>
-<li>语句解析分为了词法分析和语法分析<ul>
-<li>词法分析<ul>
-<li>分析的是SQL语句的字符串中分别是什么，代表什么。比如select就标识为查询语句，ID识别为列ID等</li>
-</ul>
-</li>
-<li>语法分析<ul>
-<li>是用来判断SQL语句是否满足MySQL语法，如果不满足则报You have an error in your SQL syntax错误</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h1><ul>
-<li>在开始执行前，还要经过优化器处理。优化器是在表里面有多个索引的时候，决定使用哪个索引，或者在一个语句有多个表关联（join）时，决定各表的连接顺序，这些都会导致执行效率的不同。</li>
-</ul>
-<h1 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h1><ul>
-<li>接下来就是进入执行器阶段，开始执行语句。</li>
-<li>基本流程<ul>
-<li>开始执行的时候，要先判断一下你对这个表 T 有没有执行查询的权限，如果没有，就会返回没有权限的错误。如果有权限，就打开表继续执行。打开表的时候，执行器就会根据表的引擎定义，去使用这个引擎提供的接口。</li>
-<li>比如我们要查询表 T 中ID为10的数据，并且ID 字段没有索引，那么执行器的执行流程是这样的：1. 调用 InnoDB 引擎接口取这个表的第一行，判断 ID 值是不是 10，如果不是则跳过，如果是则将这行存在结果集中；2. 调用引擎接口取“下一行”，重复相同的判断逻辑，直到取到这个表的最后一行。3. 执行器将上述遍历过程中所有满足条件的行组成的记录集作为结果集返回给客户端。</li>
-<li>对于有索引的表，执行的逻辑也差不多。第一次调用的是“取满足条件的第一行”这个接口，之后循环取“满足条件的下一行”这个接口，这些接口都是引擎中已经定义好的。</li>
-<li>在数据库的慢查询日志中看到一个 rows_examined 的字段，表示这个语句执行过程中扫描了多少行。这个值就是在执行器每次调用引擎获取数据行的时候累加的。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h1><ul>
-<li>什么是存储引擎？<ul>
-<li>存储引擎层负责数据的存储和提取，直接与磁盘交互部分。页是存储引擎读写数据的最小单位，一个页里可以有一条或多条表记录。其架构模式是插件式的，支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.5.5 版本开始成为了默认存储引擎，而 InnoDB 是 MySQL 中唯一能够完整支持事务特性的存储引擎。你执行 create table 建表的时候，如果不指定引擎类型，默认使用的就是InnoDB。不过，你也可以通过指定存储引擎的类型来选择别的引擎，比如在 create table语句中使用 engine&#x3D;memory, 来指定使用内存引擎创建表。</li>
-</ul>
-</li>
-<li>什么是随机 IO 和顺序 IO？<ul>
-<li>磁盘读写数据的两种方式。随机 IO 需要先找到地址，再读写数据，每次拿到的地址都是随机的。而顺序 IO，由于地址是连贯的，找到地址后，一次可以读写许多数据，效率比较高。</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-        <tag>总结</tag>
       </tags>
   </entry>
 </search>
