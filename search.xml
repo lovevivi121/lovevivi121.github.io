@@ -84,19 +84,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>操作系统-molloc和零拷贝相关</title>
     <url>/posts/1/</url>
     <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
@@ -109,6 +96,19 @@
 ]]></content>
       <categories>
         <category>blog</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
       </categories>
       <tags>
         <tag>总结</tag>
@@ -615,63 +615,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库：说一说InnoDB刷脏页</title>
-    <url>/posts/6/</url>
-    <content><![CDATA[<h1 id="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"><a href="#为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）" class="headerlink" title="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"></a>为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）</h1><h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><ul>
-<li>可能是在刷脏页（flush）（脏页即当内存数据页跟磁盘数据页内容不一致的时候，称这个内存页为脏页。）<ul>
-<li>第一种情况是redo log写满了。这时候系统会停止所有更新操作，把checkpoint往前推进，并且刷脏页，redo log留出空间可以继续写。</li>
-<li>第二种情况就是系统内存不足。这时候会要淘汰一些数据页，如果淘汰的是“脏页”，需要先将脏页写入磁盘。<ul>
-<li>InnoDB缓冲池中的内存页的三种状态<ul>
-<li>还没使用的</li>
-<li>使用了的干净页</li>
-<li>使用了的脏页</li>
-</ul>
-</li>
-<li>申请数据页<ul>
-<li>当要读入的数据页没有在内存的时候，就必须到缓冲池中申请一个数据页。这时候得把最久不使用的数据页从内存中淘汰掉。当淘汰的是脏页的时候就得先刷脏页，出现以下两种情况便会影响性能<ul>
-<li>一个查询要淘汰的脏页个数太多，导致这个查询的响应时间明显变长。</li>
-<li>日志写满了，更新全堵住，写性能跌为0。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>第三种情况是MySQL认为系统处于“空闲”状态，会进行刷脏页，但既然都是空闲了，不太可能影响性能</li>
-<li>第四种情况是MySQL正常关闭的情况，也会刷脏页。正常关闭了，也不会影响性能。</li>
-</ul>
-<h1 id="InnoDB刷脏页的控制策略"><a href="#InnoDB刷脏页的控制策略" class="headerlink" title="InnoDB刷脏页的控制策略"></a>InnoDB刷脏页的控制策略</h1><ul>
-<li>为什么需要<ul>
-<li>InnoDB需要有控制脏页比例的机制，来尽量避免一次性淘汰的脏页过多或者日志写满影响读写性能。</li>
-<li>刷脏页具体机制以及这些策略相关的参数<ul>
-<li>首先通过设置innodb_io_capacity告诉InnoDB磁盘读写能力，通常设置成磁盘的IOPS，可通过fio工具测试，得到InnoDB最大刷脏页速度。</li>
-<li>InnoDB通过全力的百分比来刷脏页<ul>
-<li>InnoDB会先根据脏页占整个缓存池的比例以及redo log写盘速度两个因素算出两个值。<ul>
-<li>参数innodb_maxdirty_pages_pct是脏页的比例上限，默认75%。</li>
-<li>第一个值是依据脏页占缓存池的比例算出来的</li>
-<li>第二个值是根据redo log中write pos和checkpoint的差值计算出来的</li>
-<li>最后按照最大刷脏页速度 * max（f1，f2）%的速度刷脏页</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>计网-传输层八股（一）</title>
     <url>/posts/11/</url>
     <content><![CDATA[<h1 id="3-10-简述-TCP-和-UDP-的区别，它们的头部结构是什么样的"><a href="#3-10-简述-TCP-和-UDP-的区别，它们的头部结构是什么样的" class="headerlink" title="3.10 简述 TCP 和 UDP 的区别，它们的头部结构是什么样的"></a>3.10 简述 TCP 和 UDP 的区别，它们的头部结构是什么样的</h1><ul>
@@ -738,6 +681,63 @@
       <tags>
         <tag>blog</tag>
         <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库：说一说InnoDB刷脏页</title>
+    <url>/posts/6/</url>
+    <content><![CDATA[<h1 id="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"><a href="#为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）" class="headerlink" title="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"></a>为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）</h1><h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><ul>
+<li>可能是在刷脏页（flush）（脏页即当内存数据页跟磁盘数据页内容不一致的时候，称这个内存页为脏页。）<ul>
+<li>第一种情况是redo log写满了。这时候系统会停止所有更新操作，把checkpoint往前推进，并且刷脏页，redo log留出空间可以继续写。</li>
+<li>第二种情况就是系统内存不足。这时候会要淘汰一些数据页，如果淘汰的是“脏页”，需要先将脏页写入磁盘。<ul>
+<li>InnoDB缓冲池中的内存页的三种状态<ul>
+<li>还没使用的</li>
+<li>使用了的干净页</li>
+<li>使用了的脏页</li>
+</ul>
+</li>
+<li>申请数据页<ul>
+<li>当要读入的数据页没有在内存的时候，就必须到缓冲池中申请一个数据页。这时候得把最久不使用的数据页从内存中淘汰掉。当淘汰的是脏页的时候就得先刷脏页，出现以下两种情况便会影响性能<ul>
+<li>一个查询要淘汰的脏页个数太多，导致这个查询的响应时间明显变长。</li>
+<li>日志写满了，更新全堵住，写性能跌为0。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第三种情况是MySQL认为系统处于“空闲”状态，会进行刷脏页，但既然都是空闲了，不太可能影响性能</li>
+<li>第四种情况是MySQL正常关闭的情况，也会刷脏页。正常关闭了，也不会影响性能。</li>
+</ul>
+<h1 id="InnoDB刷脏页的控制策略"><a href="#InnoDB刷脏页的控制策略" class="headerlink" title="InnoDB刷脏页的控制策略"></a>InnoDB刷脏页的控制策略</h1><ul>
+<li>为什么需要<ul>
+<li>InnoDB需要有控制脏页比例的机制，来尽量避免一次性淘汰的脏页过多或者日志写满影响读写性能。</li>
+<li>刷脏页具体机制以及这些策略相关的参数<ul>
+<li>首先通过设置innodb_io_capacity告诉InnoDB磁盘读写能力，通常设置成磁盘的IOPS，可通过fio工具测试，得到InnoDB最大刷脏页速度。</li>
+<li>InnoDB通过全力的百分比来刷脏页<ul>
+<li>InnoDB会先根据脏页占整个缓存池的比例以及redo log写盘速度两个因素算出两个值。<ul>
+<li>参数innodb_maxdirty_pages_pct是脏页的比例上限，默认75%。</li>
+<li>第一个值是依据脏页占缓存池的比例算出来的</li>
+<li>第二个值是根据redo log中write pos和checkpoint的差值计算出来的</li>
+<li>最后按照最大刷脏页速度 * max（f1，f2）%的速度刷脏页</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
       </tags>
   </entry>
 </search>
