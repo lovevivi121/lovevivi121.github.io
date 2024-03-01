@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>9.25-学习计算机网络MAC层、操作系统X86架构</title>
     <url>/posts/3/</url>
     <content><![CDATA[<ol>
@@ -94,6 +81,58 @@
       </categories>
       <tags>
         <tag>Diary</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-串联一致性读、当前读、行锁：事务是隔离的还是不隔离的【事务、锁】</title>
+    <url>/posts/9/</url>
+    <content><![CDATA[<h1 id="视图的两个概念"><a href="#视图的两个概念" class="headerlink" title="视图的两个概念"></a>视图的两个概念</h1><ul>
+<li>一个是view，它是一个用查询语句定义的虚拟表，在调用的时候执行查询语句并生成结果。创建视图的语法是create view …，而它的查询方法与表一样。</li>
+<li>另一个是InnoDB在实现MVCC（多版本并发控制）时用到的一致性读视图，即consistent read view，用于支持RC（Read Committed，读提交）和RR（Repeatable Read，可重复读）隔离级别的实现。</li>
+</ul>
+<h1 id="“快照”在MVCC里是怎么工作的？"><a href="#“快照”在MVCC里是怎么工作的？" class="headerlink" title="“快照”在MVCC里是怎么工作的？"></a>“快照”在MVCC里是怎么工作的？</h1><ul>
+<li>在可重复读隔离级别下，事务在启动的时候就“拍了个快照”。这个快照是基于整库的。</li>
+<li>每个事务都有一个ID，当事务对每行数据做出更新的时候将会生成一个row trx_id，值和事务ID一样，并且会生成undo log（回滚日志），通过回滚日志和当前版本可以回退到其他版本。</li>
+<li>可见和不可见问题<ul>
+<li>对于自己的更新总是可见的</li>
+<li>版本未提交，不可见；</li>
+<li>版本已提交，但是是在视图创建后提交的，不可见；</li>
+<li>版本已提交，而且是在视图创建前提交的，可见；</li>
+</ul>
+</li>
+</ul>
+<h1 id="更新逻辑"><a href="#更新逻辑" class="headerlink" title="更新逻辑"></a>更新逻辑</h1><ul>
+<li>当事务要去更新数据的时候，就不能再在历史版本上更新了。更新数据都是先读后写的，而这个读，只能读当前版本的值，称为“当前读”（current read）。</li>
+<li>假如select语句加锁，也是“当前读”。下面这两个 select 语句，就是分别加了读锁（S 锁，共享锁）和写锁（X 锁，排他锁）。<ul>
+<li>select k from t where id&#x3D;1 lock in share mode;</li>
+<li>select k from t where id&#x3D;1 for update;</li>
+</ul>
+</li>
+</ul>
+<h1 id="事务的可重复读能力是怎么实现的？"><a href="#事务的可重复读能力是怎么实现的？" class="headerlink" title="事务的可重复读能力是怎么实现的？"></a>事务的可重复读能力是怎么实现的？</h1><ul>
+<li>可重复读的核心是一致性读；而事务更新数据的时候，只能用当前读；如果当前的记录的行锁被其他事务占用了的话，就需要进入锁等待。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>事务</tag>
+        <tag>锁</tag>
+        <tag>MySQL</tag>
       </tags>
   </entry>
   <entry>
@@ -195,75 +234,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库-串联一致性读、当前读、行锁：事务是隔离的还是不隔离的【事务、锁】</title>
-    <url>/posts/9/</url>
-    <content><![CDATA[<h1 id="视图的两个概念"><a href="#视图的两个概念" class="headerlink" title="视图的两个概念"></a>视图的两个概念</h1><ul>
-<li>一个是view，它是一个用查询语句定义的虚拟表，在调用的时候执行查询语句并生成结果。创建视图的语法是create view …，而它的查询方法与表一样。</li>
-<li>另一个是InnoDB在实现MVCC（多版本并发控制）时用到的一致性读视图，即consistent read view，用于支持RC（Read Committed，读提交）和RR（Repeatable Read，可重复读）隔离级别的实现。</li>
-</ul>
-<h1 id="“快照”在MVCC里是怎么工作的？"><a href="#“快照”在MVCC里是怎么工作的？" class="headerlink" title="“快照”在MVCC里是怎么工作的？"></a>“快照”在MVCC里是怎么工作的？</h1><ul>
-<li>在可重复读隔离级别下，事务在启动的时候就“拍了个快照”。这个快照是基于整库的。</li>
-<li>每个事务都有一个ID，当事务对每行数据做出更新的时候将会生成一个row trx_id，值和事务ID一样，并且会生成undo log（回滚日志），通过回滚日志和当前版本可以回退到其他版本。</li>
-<li>可见和不可见问题<ul>
-<li>对于自己的更新总是可见的</li>
-<li>版本未提交，不可见；</li>
-<li>版本已提交，但是是在视图创建后提交的，不可见；</li>
-<li>版本已提交，而且是在视图创建前提交的，可见；</li>
-</ul>
-</li>
-</ul>
-<h1 id="更新逻辑"><a href="#更新逻辑" class="headerlink" title="更新逻辑"></a>更新逻辑</h1><ul>
-<li>当事务要去更新数据的时候，就不能再在历史版本上更新了。更新数据都是先读后写的，而这个读，只能读当前版本的值，称为“当前读”（current read）。</li>
-<li>假如select语句加锁，也是“当前读”。下面这两个 select 语句，就是分别加了读锁（S 锁，共享锁）和写锁（X 锁，排他锁）。<ul>
-<li>select k from t where id&#x3D;1 lock in share mode;</li>
-<li>select k from t where id&#x3D;1 for update;</li>
-</ul>
-</li>
-</ul>
-<h1 id="事务的可重复读能力是怎么实现的？"><a href="#事务的可重复读能力是怎么实现的？" class="headerlink" title="事务的可重复读能力是怎么实现的？"></a>事务的可重复读能力是怎么实现的？</h1><ul>
-<li>可重复读的核心是一致性读；而事务更新数据的时候，只能用当前读；如果当前的记录的行锁被其他事务占用了的话，就需要进入锁等待。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-        <tag>事务</tag>
-        <tag>锁</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库-普通索引和唯一索引怎么选择【索引】</title>
-    <url>/posts/10/</url>
-    <content><![CDATA[<h2 id="针对这个问题，就涉及到了change-buffer的相关概念"><a href="#针对这个问题，就涉及到了change-buffer的相关概念" class="headerlink" title="针对这个问题，就涉及到了change buffer的相关概念"></a>针对这个问题，就涉及到了change buffer的相关概念</h2><h3 id="change-buffer"><a href="#change-buffer" class="headerlink" title="change buffer"></a>change buffer</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ul>
-<li>当需要更新一个数据页的时候，如果数据页在内存中就直接更新；而如果这个数据页没有在内存中，在不影响数据一致性的前提下，InnoDB会将这些更新操作缓存在change buffer中，在下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行change buffer中与这个页有关的操作。将change buffer中的操作应用到原数据页的操作叫merge，除了访问该数据页会触发merge外，有后台线程会定期merge，数据库正常关闭的时候也会merge。</li>
-<li>change buffer 用的是 buffer pool 里的内存，因此不能无限增大。change buffer 的大小，可以通过参数 innodb_change_buffer_max_size 来动态设置。这个参数设置为 50 的时候，表示 change buffer 的大小最多只能占用 buffer pool 的 50%。</li>
-</ul>
-<h4 id="什么条件下可以使用change-buffer"><a href="#什么条件下可以使用change-buffer" class="headerlink" title="什么条件下可以使用change buffer"></a>什么条件下可以使用change buffer</h4><ul>
-<li>对于唯一索引来说插入操作需要先判断是否唯一，就需要将数据页读入内存，因此唯一索引不能用change buffer，只有普通索引可以使用。</li>
-<li>对于唯一索引的更新操作，假如数据页不在内存中则需要将数据读入内存，涉及到磁盘IO，而普通索引则可以将更新记录在change buffer，减少了随机磁盘访问，性能提升明显。</li>
-</ul>
-<h4 id="change-buffer-应用场景"><a href="#change-buffer-应用场景" class="headerlink" title="change buffer 应用场景"></a>change buffer 应用场景</h4><ul>
-<li>对于写多读少的业务来说，页面写完后马上被访问到的概率较小，change buffer 被merge的频率小，收益大，典型的业务模型有账单类、日志类系统。</li>
-<li>反之，如果一个业务的更新模式是写入后马上查询，那么也会由于merge而进行频繁的磁盘IO，并且还有维护change buffer的代价，吃力不讨好。</li>
-</ul>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
-<li>因此针对本节的问题，对于查询操作两个索引没有区别，主要考虑更新性能的影响。尽量使用普通索引，配合change buffer提高更新性能。如果有更新完马上查询的业务就关闭change buffer。其他情况下change buffer尽量开大，提升性能。</li>
-</ul>
-<h2 id="redo-log和change-buffer的对比"><a href="#redo-log和change-buffer的对比" class="headerlink" title="redo log和change buffer的对比"></a>redo log和change buffer的对比</h2><ul>
-<li>redo log主要节省的是随机写磁盘的IO消耗（转为顺序写），而change buffer主要节省的是随机读磁盘的IO消耗。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据库-日志系统</title>
     <url>/posts/5/</url>
     <content><![CDATA[<h1 id="更新语句的执行流程？"><a href="#更新语句的执行流程？" class="headerlink" title="更新语句的执行流程？"></a>更新语句的执行流程？</h1><ul>
@@ -327,6 +297,36 @@
 </li>
 </ul>
 </li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-普通索引和唯一索引怎么选择【索引】</title>
+    <url>/posts/10/</url>
+    <content><![CDATA[<h2 id="针对这个问题，就涉及到了change-buffer的相关概念"><a href="#针对这个问题，就涉及到了change-buffer的相关概念" class="headerlink" title="针对这个问题，就涉及到了change buffer的相关概念"></a>针对这个问题，就涉及到了change buffer的相关概念</h2><h3 id="change-buffer"><a href="#change-buffer" class="headerlink" title="change buffer"></a>change buffer</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ul>
+<li>当需要更新一个数据页的时候，如果数据页在内存中就直接更新；而如果这个数据页没有在内存中，在不影响数据一致性的前提下，InnoDB会将这些更新操作缓存在change buffer中，在下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行change buffer中与这个页有关的操作。将change buffer中的操作应用到原数据页的操作叫merge，除了访问该数据页会触发merge外，有后台线程会定期merge，数据库正常关闭的时候也会merge。</li>
+<li>change buffer 用的是 buffer pool 里的内存，因此不能无限增大。change buffer 的大小，可以通过参数 innodb_change_buffer_max_size 来动态设置。这个参数设置为 50 的时候，表示 change buffer 的大小最多只能占用 buffer pool 的 50%。</li>
+</ul>
+<h4 id="什么条件下可以使用change-buffer"><a href="#什么条件下可以使用change-buffer" class="headerlink" title="什么条件下可以使用change buffer"></a>什么条件下可以使用change buffer</h4><ul>
+<li>对于唯一索引来说插入操作需要先判断是否唯一，就需要将数据页读入内存，因此唯一索引不能用change buffer，只有普通索引可以使用。</li>
+<li>对于唯一索引的更新操作，假如数据页不在内存中则需要将数据读入内存，涉及到磁盘IO，而普通索引则可以将更新记录在change buffer，减少了随机磁盘访问，性能提升明显。</li>
+</ul>
+<h4 id="change-buffer-应用场景"><a href="#change-buffer-应用场景" class="headerlink" title="change buffer 应用场景"></a>change buffer 应用场景</h4><ul>
+<li>对于写多读少的业务来说，页面写完后马上被访问到的概率较小，change buffer 被merge的频率小，收益大，典型的业务模型有账单类、日志类系统。</li>
+<li>反之，如果一个业务的更新模式是写入后马上查询，那么也会由于merge而进行频繁的磁盘IO，并且还有维护change buffer的代价，吃力不讨好。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li>因此针对本节的问题，对于查询操作两个索引没有区别，主要考虑更新性能的影响。尽量使用普通索引，配合change buffer提高更新性能。如果有更新完马上查询的业务就关闭change buffer。其他情况下change buffer尽量开大，提升性能。</li>
+</ul>
+<h2 id="redo-log和change-buffer的对比"><a href="#redo-log和change-buffer的对比" class="headerlink" title="redo log和change buffer的对比"></a>redo log和change buffer的对比</h2><ul>
+<li>redo log主要节省的是随机写磁盘的IO消耗（转为顺序写），而change buffer主要节省的是随机读磁盘的IO消耗。</li>
 </ul>
 ]]></content>
       <categories>
@@ -505,6 +505,20 @@
       </tags>
   </entry>
   <entry>
+    <title>设计模式——策略模式</title>
+    <url>/posts/13/</url>
+    <content><![CDATA[<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 策略接口</span></span><br><span class="line"><span class="keyword">type</span> PaymentStrategy <span class="keyword">interface</span> &#123;</span><br><span class="line">	Pay(amount <span class="type">float64</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：支付宝支付</span></span><br><span class="line"><span class="keyword">type</span> AlipayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *AlipayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;支付宝支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：微信支付</span></span><br><span class="line"><span class="keyword">type</span> WeChatPayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *WeChatPayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;微信支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 环境类</span></span><br><span class="line"><span class="keyword">type</span> PaymentContext <span class="keyword">struct</span> &#123;</span><br><span class="line">	strategy PaymentStrategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> SetStrategy(strategy PaymentStrategy) &#123;</span><br><span class="line">	c.strategy = strategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	c.strategy.Pay(amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建环境对象</span></span><br><span class="line">	context := &amp;PaymentContext&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置支付宝支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;AlipayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">100.0</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置微信支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;WeChatPayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">200.0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>go-zero</category>
+      </categories>
+      <tags>
+        <tag>go-zero</tag>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库-基本架构</title>
     <url>/posts/4/</url>
     <content><![CDATA[<h1 id="大体上MySQL可以分为Server层和引擎层两个部分"><a href="#大体上MySQL可以分为Server层和引擎层两个部分" class="headerlink" title="大体上MySQL可以分为Server层和引擎层两个部分"></a>大体上MySQL可以分为Server层和引擎层两个部分</h1><h1 id="Server层"><a href="#Server层" class="headerlink" title="Server层"></a>Server层</h1><ul>
@@ -599,20 +613,6 @@
       <tags>
         <tag>总结</tag>
         <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>设计模式——策略模式</title>
-    <url>/posts/13/</url>
-    <content><![CDATA[<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 策略接口</span></span><br><span class="line"><span class="keyword">type</span> PaymentStrategy <span class="keyword">interface</span> &#123;</span><br><span class="line">	Pay(amount <span class="type">float64</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：支付宝支付</span></span><br><span class="line"><span class="keyword">type</span> AlipayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *AlipayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;支付宝支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：微信支付</span></span><br><span class="line"><span class="keyword">type</span> WeChatPayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *WeChatPayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;微信支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 环境类</span></span><br><span class="line"><span class="keyword">type</span> PaymentContext <span class="keyword">struct</span> &#123;</span><br><span class="line">	strategy PaymentStrategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> SetStrategy(strategy PaymentStrategy) &#123;</span><br><span class="line">	c.strategy = strategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	c.strategy.Pay(amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建环境对象</span></span><br><span class="line">	context := &amp;PaymentContext&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置支付宝支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;AlipayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">100.0</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置微信支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;WeChatPayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">200.0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>go-zero</category>
-      </categories>
-      <tags>
-        <tag>go-zero</tag>
-        <tag>设计模式</tag>
       </tags>
   </entry>
   <entry>
