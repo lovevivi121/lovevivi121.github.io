@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://pic.imgdb.cn/item/65e23f649f345e8d03add96d.jpg"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>操作系统-molloc和零拷贝相关</title>
+    <url>/posts/1/</url>
+    <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
+<li>修改公告 在source&#x2F;_data&#x2F;butterfly.yml中找到并修改</li>
+<li>添加文章 在source&#x2F;_posts 下面的对应分类中copy本模板然后修改内容即可</li>
+<li>添加分类 在写文章的时候写上对应分类即可</li>
+<li>添加图片 首先添加到图床中，然后将链接放上去</li>
+<li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
+</ol>
+<h1 id="部署到云服务器"><a href="#部署到云服务器" class="headerlink" title="部署到云服务器"></a>部署到云服务器</h1><p>1. </p>
+]]></content>
+      <categories>
+        <category>blog</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>9.25-学习计算机网络MAC层、操作系统X86架构</title>
     <url>/posts/3/</url>
     <content><![CDATA[<ol>
@@ -84,36 +117,31 @@
       </tags>
   </entry>
   <entry>
-    <title>操作系统-molloc和零拷贝相关</title>
-    <url>/posts/1/</url>
-    <content><![CDATA[<h1 id="开发流程："><a href="#开发流程：" class="headerlink" title="开发流程："></a>开发流程：</h1><ol>
-<li>修改公告 在source&#x2F;_data&#x2F;butterfly.yml中找到并修改</li>
-<li>添加文章 在source&#x2F;_posts 下面的对应分类中copy本模板然后修改内容即可</li>
-<li>添加分类 在写文章的时候写上对应分类即可</li>
-<li>添加图片 首先添加到图床中，然后将链接放上去</li>
-<li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
-</ol>
-<h1 id="部署到云服务器"><a href="#部署到云服务器" class="headerlink" title="部署到云服务器"></a>部署到云服务器</h1><p>1. </p>
+    <title>开发模板</title>
+    <url>/posts/12/</url>
+    <content><![CDATA[<h1 id="molloc"><a href="#molloc" class="headerlink" title="molloc"></a>molloc</h1><ul>
+<li>molloc有两种实现方式，brk和mmap。当申请内存小于128kb时使用brk，大于则使用mmap。brk申请的空间在free释放时不会真的释放，而是会放回内存池；它的好处是可以一次分配更大内存，避免频繁申请内存带来的切换开销；但是会产生内存碎片</li>
+<li>mmap申请的内存空间在free时会归还给系统。但是每次mmap申请的内存第一次访问都需要触发缺页中断；并且需要进入内核，要频繁的状态切换。mmap的原理时直接将虚拟地址与内核缓冲区地址进行映射，避免内核缓冲区到用户缓冲区的copy</li>
+</ul>
+<h1 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h1><ul>
+<li>零拷贝是说不需要CPU将数据拷贝到另一个区域。</li>
+<li>首先是DMA代替CPU将数据从磁盘缓冲区调入内核缓冲区。</li>
+<li>由于数据加工都是在内核空间完成的，因此也不需要将数据从内核缓冲区拷贝到用户缓冲区。这一步有两种方法<ul>
+<li>第一种是使用mmap+write。用mmap代替read，避免copy，此时仍然需要4次状态切换以及一次缓冲区到socket的拷贝</li>
+<li>第二种是使用sendfile。用sendfile代替read和write，这样只需要两次状态切换。同时缓冲区直接通过SGDMA传到网卡，实现真正的零拷贝</li>
+</ul>
+</li>
+</ul>
+<h1 id="如何实现大文件传输"><a href="#如何实现大文件传输" class="headerlink" title="如何实现大文件传输"></a>如何实现大文件传输</h1><ul>
+<li>针对大文件传输，不能使用零拷贝，因为pagecache不会起作用，导致其他小文件无法享用pagecache，在高并发场景下会造成严重性能问题。因此采用异步IO，绕过pagecache，同时避免read的阻塞问题。<br><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240112223858.jpg"></li>
+</ul>
 ]]></content>
       <categories>
-        <category>blog</category>
+        <category>操作系统</category>
       </categories>
       <tags>
         <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://pic.imgdb.cn/item/65e23f649f345e8d03add96d.jpg"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
+        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>
@@ -153,84 +181,6 @@
         <tag>事务</tag>
         <tag>锁</tag>
         <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库-事务隔离</title>
-    <url>/posts/7/</url>
-    <content><![CDATA[<h1 id="事务的基本概念"><a href="#事务的基本概念" class="headerlink" title="事务的基本概念"></a>事务的基本概念</h1><ul>
-<li>事务就是保证一组数据库操作，要么全部成功，要么全部失败。在MySQL中，事务支持实在引擎层实现的，其中MyISAM引擎不支持事务。</li>
-</ul>
-<h1 id="隔离性与隔离级别"><a href="#隔离性与隔离级别" class="headerlink" title="隔离性与隔离级别"></a>隔离性与隔离级别</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
-<li>事务有4大特性ACID，分别是原子性、一致性、隔离性、持久性，隔离性便是其中之一。</li>
-<li>当数据库上有多个事务在同时执行时，可能出现脏读、不可重复读、幻读（TODO：解释这三个名词）的问题，为了解决这些问题，引出了“隔离级别”的概念。隔离得越严实，效率就会越低，因此需要在二者之间找到平衡。</li>
-<li>SQL标准的事务隔离级别包括：读未提交、读提交、可重复读和串行化。<ul>
-<li>读未提交是指其他事务能够读到一个没有提交的事务的变更。</li>
-<li>读提交是指其他事务能够读到一已提交的事务的变更。</li>
-<li>可重复读是指一个事务执行过程中读到的数据总是和事务启动时读到的一致。</li>
-<li>串行化是指对于同一行记录，写加写锁，读加读锁，多个写操作串行访问。</li>
-</ul>
-</li>
-</ul>
-<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h2><ul>
-<li>在实现上，数据库里面会创建一个视图，访问的时候以视图的逻辑为准。在“可重复读”隔离级别下，这个视图是在事务启动的时候创建的，整个事务存在期间都用这个视图。在“读提交”隔离级别下，这个视图是在每个SQL语句开始执行时创建的。需要注意的是，对于“读未提交”隔离级别，是直接返回记录的最新值，没有视图的概念。而“串行化”隔离级别下直接用加锁的方式来避免并行访问。MySQL通过设置transaction_isolation参数修改隔离级别。</li>
-</ul>
-<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
-<li>可重复读<ul>
-<li>比如希望在进行数据分析处理的过程中，不受其他事务更新的影响，就可以用“可重复读”隔离级别。</li>
-</ul>
-</li>
-</ul>
-<h2 id="事务隔离的实现"><a href="#事务隔离的实现" class="headerlink" title="事务隔离的实现"></a>事务隔离的实现</h2><ul>
-<li>以可重复读为例子。在MySQL中实际上每条记录在更新时都会同时记录一条回滚操作，记录上的最新值可通过回滚得到前一个状态的值。同一条记录在系统中可以存在多个版本，就是数据库的多版本并发控制（MVCC）。不同的视图通过回滚操作得到。当系统里面没有比当前回滚日志更早的视图时，回滚日志就会删除。</li>
-</ul>
-<h2 id="为什么建议不要使用长事务？"><a href="#为什么建议不要使用长事务？" class="headerlink" title="为什么建议不要使用长事务？"></a>为什么建议不要使用长事务？</h2><ul>
-<li>长事务意味着系统里面存在很老的事务视图。由于这些食物随时会访问数据库里面任何数据，因此在十五提交前，数据库里面它可能用到的回滚记录都必须保留，这样会导致占用大量存储空间。并且长事务占用所资源，也可能拖垮整个库。</li>
-<li>你可以在 information_schema 库的 innodb_trx 这个表中查询长事务</li>
-</ul>
-<h2 id="事务的启动方式"><a href="#事务的启动方式" class="headerlink" title="事务的启动方式"></a>事务的启动方式</h2><ul>
-<li>MySQL的启动方式有以下几种：<ul>
-<li>1、显示启动事务语句，begin或者start transaction。配套的提交语句时commit，回滚语句时rollback。</li>
-<li>2、set autocommit&#x3D;0，这个命令会将这个线程的自动提交关掉，意味着如果你只执行一个select语句，这个事务就启动了，而且并不会自动提交。这个事务持续存在直到你主动执行commit或者rollback语句，或者断开连接。</li>
-<li>在 autocommit 为 1 的情况下，用 begin 显式启动的事务，如果执行 commit 则提交事务。如果执行 commit work and chain，则是提交事务并自动启动下一个事务，这样也省去了再次执行 begin 语句的开销。同时带来的好处是从程序开发的角度明确地知道每个语句是否处于事务中。</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>开发模板</title>
-    <url>/posts/12/</url>
-    <content><![CDATA[<h1 id="molloc"><a href="#molloc" class="headerlink" title="molloc"></a>molloc</h1><ul>
-<li>molloc有两种实现方式，brk和mmap。当申请内存小于128kb时使用brk，大于则使用mmap。brk申请的空间在free释放时不会真的释放，而是会放回内存池；它的好处是可以一次分配更大内存，避免频繁申请内存带来的切换开销；但是会产生内存碎片</li>
-<li>mmap申请的内存空间在free时会归还给系统。但是每次mmap申请的内存第一次访问都需要触发缺页中断；并且需要进入内核，要频繁的状态切换。mmap的原理时直接将虚拟地址与内核缓冲区地址进行映射，避免内核缓冲区到用户缓冲区的copy</li>
-</ul>
-<h1 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h1><ul>
-<li>零拷贝是说不需要CPU将数据拷贝到另一个区域。</li>
-<li>首先是DMA代替CPU将数据从磁盘缓冲区调入内核缓冲区。</li>
-<li>由于数据加工都是在内核空间完成的，因此也不需要将数据从内核缓冲区拷贝到用户缓冲区。这一步有两种方法<ul>
-<li>第一种是使用mmap+write。用mmap代替read，避免copy，此时仍然需要4次状态切换以及一次缓冲区到socket的拷贝</li>
-<li>第二种是使用sendfile。用sendfile代替read和write，这样只需要两次状态切换。同时缓冲区直接通过SGDMA传到网卡，实现真正的零拷贝</li>
-</ul>
-</li>
-</ul>
-<h1 id="如何实现大文件传输"><a href="#如何实现大文件传输" class="headerlink" title="如何实现大文件传输"></a>如何实现大文件传输</h1><ul>
-<li>针对大文件传输，不能使用零拷贝，因为pagecache不会起作用，导致其他小文件无法享用pagecache，在高并发场景下会造成严重性能问题。因此采用异步IO，绕过pagecache，同时避免read的阻塞问题。<br><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240112223858.jpg"></li>
-</ul>
-]]></content>
-      <categories>
-        <category>操作系统</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>
@@ -295,6 +245,86 @@
 <li>假如使用两段式提交，在MySQL宕机恢复的时候，如果发现redo log 中某个事务处于commit状态，则说明binlog一定记录了，直接恢复即可；如果redo log 某个事务处于prepare状态，则查看binlgo中是否有该事务的数据（依据全局唯一事务ID），如果有，则恢复，否则丢弃redo log的该条事务。这样从而保证redo log 和binlog 的数据一致性。</li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-普通索引和唯一索引怎么选择【索引】</title>
+    <url>/posts/10/</url>
+    <content><![CDATA[<h2 id="针对这个问题，就涉及到了change-buffer的相关概念"><a href="#针对这个问题，就涉及到了change-buffer的相关概念" class="headerlink" title="针对这个问题，就涉及到了change buffer的相关概念"></a>针对这个问题，就涉及到了change buffer的相关概念</h2><h3 id="change-buffer"><a href="#change-buffer" class="headerlink" title="change buffer"></a>change buffer</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ul>
+<li>当需要更新一个数据页的时候，如果数据页在内存中就直接更新；而如果这个数据页没有在内存中，在不影响数据一致性的前提下，InnoDB会将这些更新操作缓存在change buffer中，在下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行change buffer中与这个页有关的操作。将change buffer中的操作应用到原数据页的操作叫merge，除了访问该数据页会触发merge外，有后台线程会定期merge，数据库正常关闭的时候也会merge。</li>
+<li>change buffer 用的是 buffer pool 里的内存，因此不能无限增大。change buffer 的大小，可以通过参数 innodb_change_buffer_max_size 来动态设置。这个参数设置为 50 的时候，表示 change buffer 的大小最多只能占用 buffer pool 的 50%。</li>
+</ul>
+<h4 id="什么条件下可以使用change-buffer"><a href="#什么条件下可以使用change-buffer" class="headerlink" title="什么条件下可以使用change buffer"></a>什么条件下可以使用change buffer</h4><ul>
+<li>对于唯一索引来说插入操作需要先判断是否唯一，就需要将数据页读入内存，因此唯一索引不能用change buffer，只有普通索引可以使用。</li>
+<li>对于唯一索引的更新操作，假如数据页不在内存中则需要将数据读入内存，涉及到磁盘IO，而普通索引则可以将更新记录在change buffer，减少了随机磁盘访问，性能提升明显。</li>
+</ul>
+<h4 id="change-buffer-应用场景"><a href="#change-buffer-应用场景" class="headerlink" title="change buffer 应用场景"></a>change buffer 应用场景</h4><ul>
+<li>对于写多读少的业务来说，页面写完后马上被访问到的概率较小，change buffer 被merge的频率小，收益大，典型的业务模型有账单类、日志类系统。</li>
+<li>反之，如果一个业务的更新模式是写入后马上查询，那么也会由于merge而进行频繁的磁盘IO，并且还有维护change buffer的代价，吃力不讨好。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li>因此针对本节的问题，对于查询操作两个索引没有区别，主要考虑更新性能的影响。尽量使用普通索引，配合change buffer提高更新性能。如果有更新完马上查询的业务就关闭change buffer。其他情况下change buffer尽量开大，提升性能。</li>
+</ul>
+<h2 id="redo-log和change-buffer的对比"><a href="#redo-log和change-buffer的对比" class="headerlink" title="redo log和change buffer的对比"></a>redo log和change buffer的对比</h2><ul>
+<li>redo log主要节省的是随机写磁盘的IO消耗（转为顺序写），而change buffer主要节省的是随机读磁盘的IO消耗。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-事务隔离</title>
+    <url>/posts/7/</url>
+    <content><![CDATA[<h1 id="事务的基本概念"><a href="#事务的基本概念" class="headerlink" title="事务的基本概念"></a>事务的基本概念</h1><ul>
+<li>事务就是保证一组数据库操作，要么全部成功，要么全部失败。在MySQL中，事务支持实在引擎层实现的，其中MyISAM引擎不支持事务。</li>
+</ul>
+<h1 id="隔离性与隔离级别"><a href="#隔离性与隔离级别" class="headerlink" title="隔离性与隔离级别"></a>隔离性与隔离级别</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li>事务有4大特性ACID，分别是原子性、一致性、隔离性、持久性，隔离性便是其中之一。</li>
+<li>当数据库上有多个事务在同时执行时，可能出现脏读、不可重复读、幻读（TODO：解释这三个名词）的问题，为了解决这些问题，引出了“隔离级别”的概念。隔离得越严实，效率就会越低，因此需要在二者之间找到平衡。</li>
+<li>SQL标准的事务隔离级别包括：读未提交、读提交、可重复读和串行化。<ul>
+<li>读未提交是指其他事务能够读到一个没有提交的事务的变更。</li>
+<li>读提交是指其他事务能够读到一已提交的事务的变更。</li>
+<li>可重复读是指一个事务执行过程中读到的数据总是和事务启动时读到的一致。</li>
+<li>串行化是指对于同一行记录，写加写锁，读加读锁，多个写操作串行访问。</li>
+</ul>
+</li>
+</ul>
+<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h2><ul>
+<li>在实现上，数据库里面会创建一个视图，访问的时候以视图的逻辑为准。在“可重复读”隔离级别下，这个视图是在事务启动的时候创建的，整个事务存在期间都用这个视图。在“读提交”隔离级别下，这个视图是在每个SQL语句开始执行时创建的。需要注意的是，对于“读未提交”隔离级别，是直接返回记录的最新值，没有视图的概念。而“串行化”隔离级别下直接用加锁的方式来避免并行访问。MySQL通过设置transaction_isolation参数修改隔离级别。</li>
+</ul>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
+<li>可重复读<ul>
+<li>比如希望在进行数据分析处理的过程中，不受其他事务更新的影响，就可以用“可重复读”隔离级别。</li>
+</ul>
+</li>
+</ul>
+<h2 id="事务隔离的实现"><a href="#事务隔离的实现" class="headerlink" title="事务隔离的实现"></a>事务隔离的实现</h2><ul>
+<li>以可重复读为例子。在MySQL中实际上每条记录在更新时都会同时记录一条回滚操作，记录上的最新值可通过回滚得到前一个状态的值。同一条记录在系统中可以存在多个版本，就是数据库的多版本并发控制（MVCC）。不同的视图通过回滚操作得到。当系统里面没有比当前回滚日志更早的视图时，回滚日志就会删除。</li>
+</ul>
+<h2 id="为什么建议不要使用长事务？"><a href="#为什么建议不要使用长事务？" class="headerlink" title="为什么建议不要使用长事务？"></a>为什么建议不要使用长事务？</h2><ul>
+<li>长事务意味着系统里面存在很老的事务视图。由于这些食物随时会访问数据库里面任何数据，因此在十五提交前，数据库里面它可能用到的回滚记录都必须保留，这样会导致占用大量存储空间。并且长事务占用所资源，也可能拖垮整个库。</li>
+<li>你可以在 information_schema 库的 innodb_trx 这个表中查询长事务</li>
+</ul>
+<h2 id="事务的启动方式"><a href="#事务的启动方式" class="headerlink" title="事务的启动方式"></a>事务的启动方式</h2><ul>
+<li>MySQL的启动方式有以下几种：<ul>
+<li>1、显示启动事务语句，begin或者start transaction。配套的提交语句时commit，回滚语句时rollback。</li>
+<li>2、set autocommit&#x3D;0，这个命令会将这个线程的自动提交关掉，意味着如果你只执行一个select语句，这个事务就启动了，而且并不会自动提交。这个事务持续存在直到你主动执行commit或者rollback语句，或者断开连接。</li>
+<li>在 autocommit 为 1 的情况下，用 begin 显式启动的事务，如果执行 commit 则提交事务。如果执行 commit work and chain，则是提交事务并自动启动下一个事务，这样也省去了再次执行 begin 语句的开销。同时带来的好处是从程序开发的角度明确地知道每个语句是否处于事务中。</li>
 </ul>
 </li>
 </ul>
@@ -475,36 +505,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库-普通索引和唯一索引怎么选择【索引】</title>
-    <url>/posts/10/</url>
-    <content><![CDATA[<h2 id="针对这个问题，就涉及到了change-buffer的相关概念"><a href="#针对这个问题，就涉及到了change-buffer的相关概念" class="headerlink" title="针对这个问题，就涉及到了change buffer的相关概念"></a>针对这个问题，就涉及到了change buffer的相关概念</h2><h3 id="change-buffer"><a href="#change-buffer" class="headerlink" title="change buffer"></a>change buffer</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ul>
-<li>当需要更新一个数据页的时候，如果数据页在内存中就直接更新；而如果这个数据页没有在内存中，在不影响数据一致性的前提下，InnoDB会将这些更新操作缓存在change buffer中，在下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行change buffer中与这个页有关的操作。将change buffer中的操作应用到原数据页的操作叫merge，除了访问该数据页会触发merge外，有后台线程会定期merge，数据库正常关闭的时候也会merge。</li>
-<li>change buffer 用的是 buffer pool 里的内存，因此不能无限增大。change buffer 的大小，可以通过参数 innodb_change_buffer_max_size 来动态设置。这个参数设置为 50 的时候，表示 change buffer 的大小最多只能占用 buffer pool 的 50%。</li>
-</ul>
-<h4 id="什么条件下可以使用change-buffer"><a href="#什么条件下可以使用change-buffer" class="headerlink" title="什么条件下可以使用change buffer"></a>什么条件下可以使用change buffer</h4><ul>
-<li>对于唯一索引来说插入操作需要先判断是否唯一，就需要将数据页读入内存，因此唯一索引不能用change buffer，只有普通索引可以使用。</li>
-<li>对于唯一索引的更新操作，假如数据页不在内存中则需要将数据读入内存，涉及到磁盘IO，而普通索引则可以将更新记录在change buffer，减少了随机磁盘访问，性能提升明显。</li>
-</ul>
-<h4 id="change-buffer-应用场景"><a href="#change-buffer-应用场景" class="headerlink" title="change buffer 应用场景"></a>change buffer 应用场景</h4><ul>
-<li>对于写多读少的业务来说，页面写完后马上被访问到的概率较小，change buffer 被merge的频率小，收益大，典型的业务模型有账单类、日志类系统。</li>
-<li>反之，如果一个业务的更新模式是写入后马上查询，那么也会由于merge而进行频繁的磁盘IO，并且还有维护change buffer的代价，吃力不讨好。</li>
-</ul>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
-<li>因此针对本节的问题，对于查询操作两个索引没有区别，主要考虑更新性能的影响。尽量使用普通索引，配合change buffer提高更新性能。如果有更新完马上查询的业务就关闭change buffer。其他情况下change buffer尽量开大，提升性能。</li>
-</ul>
-<h2 id="redo-log和change-buffer的对比"><a href="#redo-log和change-buffer的对比" class="headerlink" title="redo log和change buffer的对比"></a>redo log和change buffer的对比</h2><ul>
-<li>redo log主要节省的是随机写磁盘的IO消耗（转为顺序写），而change buffer主要节省的是随机读磁盘的IO消耗。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>设计模式——策略模式</title>
     <url>/posts/13/</url>
     <content><![CDATA[<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 策略接口</span></span><br><span class="line"><span class="keyword">type</span> PaymentStrategy <span class="keyword">interface</span> &#123;</span><br><span class="line">	Pay(amount <span class="type">float64</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：支付宝支付</span></span><br><span class="line"><span class="keyword">type</span> AlipayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *AlipayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;支付宝支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：微信支付</span></span><br><span class="line"><span class="keyword">type</span> WeChatPayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *WeChatPayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;微信支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 环境类</span></span><br><span class="line"><span class="keyword">type</span> PaymentContext <span class="keyword">struct</span> &#123;</span><br><span class="line">	strategy PaymentStrategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> SetStrategy(strategy PaymentStrategy) &#123;</span><br><span class="line">	c.strategy = strategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	c.strategy.Pay(amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建环境对象</span></span><br><span class="line">	context := &amp;PaymentContext&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置支付宝支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;AlipayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">100.0</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置微信支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;WeChatPayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">200.0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -516,6 +516,20 @@
       <tags>
         <tag>go-zero</tag>
         <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法笔记1</title>
+    <url>/posts/15/</url>
+    <content><![CDATA[<p>链表专题<br>合并链表<br>反转链表<br>反转整个链表<br>    递归实现<br>反转前n个节点<br>    basecase为1，记录一个后驱节点<br>反转mn区间的节点<br>    m&#x3D;&#x3D;1，不为1则前进到触发m&#x3D;&#x3D;1</p>
+<p>记住那几个图是关键</p>
+]]></content>
+      <categories>
+        <category>blog</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
@@ -682,20 +696,6 @@
       <tags>
         <tag>blog</tag>
         <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法笔记1</title>
-    <url>/posts/15/</url>
-    <content><![CDATA[<p>链表专题<br>合并链表<br>反转链表<br>反转整个链表<br>    递归实现<br>反转前n个节点<br>    basecase为1，记录一个后驱节点<br>反转mn区间的节点<br>    m&#x3D;&#x3D;1，不为1则前进到触发m&#x3D;&#x3D;1</p>
-<p>记住那几个图是关键</p>
-]]></content>
-      <categories>
-        <category>blog</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
       </tags>
   </entry>
   <entry>

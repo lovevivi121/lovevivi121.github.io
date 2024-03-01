@@ -236,13 +236,6 @@
 
   
   <url>
-    <loc>https://lovevivi121.github.io/tags/Diary/</loc>
-    <lastmod>2024-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://lovevivi121.github.io/tags/%E6%80%BB%E7%BB%93/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
@@ -251,6 +244,20 @@
   
   <url>
     <loc>https://lovevivi121.github.io/tags/blog/</loc>
+    <lastmod>2024-03-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://lovevivi121.github.io/tags/Diary/</loc>
+    <lastmod>2024-03-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://lovevivi121.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -272,13 +279,6 @@
   
   <url>
     <loc>https://lovevivi121.github.io/tags/MySQL/</loc>
-    <lastmod>2024-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://lovevivi121.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -308,7 +308,7 @@
 
   
   <url>
-    <loc>https://lovevivi121.github.io/categories/Diary/</loc>
+    <loc>https://lovevivi121.github.io/categories/GO/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -322,14 +322,7 @@
   </url>
   
   <url>
-    <loc>https://lovevivi121.github.io/categories/GO/</loc>
-    <lastmod>2024-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://lovevivi121.github.io/categories/MySQL/</loc>
+    <loc>https://lovevivi121.github.io/categories/Diary/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -337,6 +330,13 @@
   
   <url>
     <loc>https://lovevivi121.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2024-03-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://lovevivi121.github.io/categories/MySQL/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
