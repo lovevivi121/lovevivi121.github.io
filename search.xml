@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Go并发编程</title>
+    <url>/posts/2/</url>
+    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
+]]></content>
+      <categories>
+        <category>GO</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>9.25-学习计算机网络MAC层、操作系统X86架构</title>
     <url>/posts/3/</url>
     <content><![CDATA[<ol>
@@ -93,6 +106,7 @@
 <li>添加图片 首先添加到图床中，然后将链接放上去</li>
 <li>上传 运行命令 <code>hexo s</code>（本地预览），<code>hexo clean</code>（清除生成文件），<code>hexo g</code>（生成网页）,<code>hexo deploy</code>（部署）</li>
 </ol>
+<h1 id="部署到云服务器"><a href="#部署到云服务器" class="headerlink" title="部署到云服务器"></a>部署到云服务器</h1><p>1. </p>
 ]]></content>
       <categories>
         <category>blog</category>
@@ -100,58 +114,6 @@
       <tags>
         <tag>总结</tag>
         <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go并发编程</title>
-    <url>/posts/2/</url>
-    <content><![CDATA[<p><img src= "/img/loading.gif" data-src="https://cdn.jsdelivr.net/gh/lovevivi121/PicGo/img/Go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4.png"></p>
-]]></content>
-      <categories>
-        <category>GO</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库-串联一致性读、当前读、行锁：事务是隔离的还是不隔离的【事务、锁】</title>
-    <url>/posts/9/</url>
-    <content><![CDATA[<h1 id="视图的两个概念"><a href="#视图的两个概念" class="headerlink" title="视图的两个概念"></a>视图的两个概念</h1><ul>
-<li>一个是view，它是一个用查询语句定义的虚拟表，在调用的时候执行查询语句并生成结果。创建视图的语法是create view …，而它的查询方法与表一样。</li>
-<li>另一个是InnoDB在实现MVCC（多版本并发控制）时用到的一致性读视图，即consistent read view，用于支持RC（Read Committed，读提交）和RR（Repeatable Read，可重复读）隔离级别的实现。</li>
-</ul>
-<h1 id="“快照”在MVCC里是怎么工作的？"><a href="#“快照”在MVCC里是怎么工作的？" class="headerlink" title="“快照”在MVCC里是怎么工作的？"></a>“快照”在MVCC里是怎么工作的？</h1><ul>
-<li>在可重复读隔离级别下，事务在启动的时候就“拍了个快照”。这个快照是基于整库的。</li>
-<li>每个事务都有一个ID，当事务对每行数据做出更新的时候将会生成一个row trx_id，值和事务ID一样，并且会生成undo log（回滚日志），通过回滚日志和当前版本可以回退到其他版本。</li>
-<li>可见和不可见问题<ul>
-<li>对于自己的更新总是可见的</li>
-<li>版本未提交，不可见；</li>
-<li>版本已提交，但是是在视图创建后提交的，不可见；</li>
-<li>版本已提交，而且是在视图创建前提交的，可见；</li>
-</ul>
-</li>
-</ul>
-<h1 id="更新逻辑"><a href="#更新逻辑" class="headerlink" title="更新逻辑"></a>更新逻辑</h1><ul>
-<li>当事务要去更新数据的时候，就不能再在历史版本上更新了。更新数据都是先读后写的，而这个读，只能读当前版本的值，称为“当前读”（current read）。</li>
-<li>假如select语句加锁，也是“当前读”。下面这两个 select 语句，就是分别加了读锁（S 锁，共享锁）和写锁（X 锁，排他锁）。<ul>
-<li>select k from t where id&#x3D;1 lock in share mode;</li>
-<li>select k from t where id&#x3D;1 for update;</li>
-</ul>
-</li>
-</ul>
-<h1 id="事务的可重复读能力是怎么实现的？"><a href="#事务的可重复读能力是怎么实现的？" class="headerlink" title="事务的可重复读能力是怎么实现的？"></a>事务的可重复读能力是怎么实现的？</h1><ul>
-<li>可重复读的核心是一致性读；而事务更新数据的时候，只能用当前读；如果当前的记录的行锁被其他事务占用了的话，就需要进入锁等待。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>事务</tag>
-        <tag>锁</tag>
-        <tag>MySQL</tag>
       </tags>
   </entry>
   <entry>
@@ -233,6 +195,75 @@
       </tags>
   </entry>
   <entry>
+    <title>数据库-串联一致性读、当前读、行锁：事务是隔离的还是不隔离的【事务、锁】</title>
+    <url>/posts/9/</url>
+    <content><![CDATA[<h1 id="视图的两个概念"><a href="#视图的两个概念" class="headerlink" title="视图的两个概念"></a>视图的两个概念</h1><ul>
+<li>一个是view，它是一个用查询语句定义的虚拟表，在调用的时候执行查询语句并生成结果。创建视图的语法是create view …，而它的查询方法与表一样。</li>
+<li>另一个是InnoDB在实现MVCC（多版本并发控制）时用到的一致性读视图，即consistent read view，用于支持RC（Read Committed，读提交）和RR（Repeatable Read，可重复读）隔离级别的实现。</li>
+</ul>
+<h1 id="“快照”在MVCC里是怎么工作的？"><a href="#“快照”在MVCC里是怎么工作的？" class="headerlink" title="“快照”在MVCC里是怎么工作的？"></a>“快照”在MVCC里是怎么工作的？</h1><ul>
+<li>在可重复读隔离级别下，事务在启动的时候就“拍了个快照”。这个快照是基于整库的。</li>
+<li>每个事务都有一个ID，当事务对每行数据做出更新的时候将会生成一个row trx_id，值和事务ID一样，并且会生成undo log（回滚日志），通过回滚日志和当前版本可以回退到其他版本。</li>
+<li>可见和不可见问题<ul>
+<li>对于自己的更新总是可见的</li>
+<li>版本未提交，不可见；</li>
+<li>版本已提交，但是是在视图创建后提交的，不可见；</li>
+<li>版本已提交，而且是在视图创建前提交的，可见；</li>
+</ul>
+</li>
+</ul>
+<h1 id="更新逻辑"><a href="#更新逻辑" class="headerlink" title="更新逻辑"></a>更新逻辑</h1><ul>
+<li>当事务要去更新数据的时候，就不能再在历史版本上更新了。更新数据都是先读后写的，而这个读，只能读当前版本的值，称为“当前读”（current read）。</li>
+<li>假如select语句加锁，也是“当前读”。下面这两个 select 语句，就是分别加了读锁（S 锁，共享锁）和写锁（X 锁，排他锁）。<ul>
+<li>select k from t where id&#x3D;1 lock in share mode;</li>
+<li>select k from t where id&#x3D;1 for update;</li>
+</ul>
+</li>
+</ul>
+<h1 id="事务的可重复读能力是怎么实现的？"><a href="#事务的可重复读能力是怎么实现的？" class="headerlink" title="事务的可重复读能力是怎么实现的？"></a>事务的可重复读能力是怎么实现的？</h1><ul>
+<li>可重复读的核心是一致性读；而事务更新数据的时候，只能用当前读；如果当前的记录的行锁被其他事务占用了的话，就需要进入锁等待。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>事务</tag>
+        <tag>锁</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库-普通索引和唯一索引怎么选择【索引】</title>
+    <url>/posts/10/</url>
+    <content><![CDATA[<h2 id="针对这个问题，就涉及到了change-buffer的相关概念"><a href="#针对这个问题，就涉及到了change-buffer的相关概念" class="headerlink" title="针对这个问题，就涉及到了change buffer的相关概念"></a>针对这个问题，就涉及到了change buffer的相关概念</h2><h3 id="change-buffer"><a href="#change-buffer" class="headerlink" title="change buffer"></a>change buffer</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ul>
+<li>当需要更新一个数据页的时候，如果数据页在内存中就直接更新；而如果这个数据页没有在内存中，在不影响数据一致性的前提下，InnoDB会将这些更新操作缓存在change buffer中，在下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行change buffer中与这个页有关的操作。将change buffer中的操作应用到原数据页的操作叫merge，除了访问该数据页会触发merge外，有后台线程会定期merge，数据库正常关闭的时候也会merge。</li>
+<li>change buffer 用的是 buffer pool 里的内存，因此不能无限增大。change buffer 的大小，可以通过参数 innodb_change_buffer_max_size 来动态设置。这个参数设置为 50 的时候，表示 change buffer 的大小最多只能占用 buffer pool 的 50%。</li>
+</ul>
+<h4 id="什么条件下可以使用change-buffer"><a href="#什么条件下可以使用change-buffer" class="headerlink" title="什么条件下可以使用change buffer"></a>什么条件下可以使用change buffer</h4><ul>
+<li>对于唯一索引来说插入操作需要先判断是否唯一，就需要将数据页读入内存，因此唯一索引不能用change buffer，只有普通索引可以使用。</li>
+<li>对于唯一索引的更新操作，假如数据页不在内存中则需要将数据读入内存，涉及到磁盘IO，而普通索引则可以将更新记录在change buffer，减少了随机磁盘访问，性能提升明显。</li>
+</ul>
+<h4 id="change-buffer-应用场景"><a href="#change-buffer-应用场景" class="headerlink" title="change buffer 应用场景"></a>change buffer 应用场景</h4><ul>
+<li>对于写多读少的业务来说，页面写完后马上被访问到的概率较小，change buffer 被merge的频率小，收益大，典型的业务模型有账单类、日志类系统。</li>
+<li>反之，如果一个业务的更新模式是写入后马上查询，那么也会由于merge而进行频繁的磁盘IO，并且还有维护change buffer的代价，吃力不讨好。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li>因此针对本节的问题，对于查询操作两个索引没有区别，主要考虑更新性能的影响。尽量使用普通索引，配合change buffer提高更新性能。如果有更新完马上查询的业务就关闭change buffer。其他情况下change buffer尽量开大，提升性能。</li>
+</ul>
+<h2 id="redo-log和change-buffer的对比"><a href="#redo-log和change-buffer的对比" class="headerlink" title="redo log和change buffer的对比"></a>redo log和change buffer的对比</h2><ul>
+<li>redo log主要节省的是随机写磁盘的IO消耗（转为顺序写），而change buffer主要节省的是随机读磁盘的IO消耗。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库-日志系统</title>
     <url>/posts/5/</url>
     <content><![CDATA[<h1 id="更新语句的执行流程？"><a href="#更新语句的执行流程？" class="headerlink" title="更新语句的执行流程？"></a>更新语句的执行流程？</h1><ul>
@@ -304,147 +335,6 @@
       <tags>
         <tag>总结</tag>
         <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库-普通索引和唯一索引怎么选择【索引】</title>
-    <url>/posts/10/</url>
-    <content><![CDATA[<h2 id="针对这个问题，就涉及到了change-buffer的相关概念"><a href="#针对这个问题，就涉及到了change-buffer的相关概念" class="headerlink" title="针对这个问题，就涉及到了change buffer的相关概念"></a>针对这个问题，就涉及到了change buffer的相关概念</h2><h3 id="change-buffer"><a href="#change-buffer" class="headerlink" title="change buffer"></a>change buffer</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ul>
-<li>当需要更新一个数据页的时候，如果数据页在内存中就直接更新；而如果这个数据页没有在内存中，在不影响数据一致性的前提下，InnoDB会将这些更新操作缓存在change buffer中，在下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行change buffer中与这个页有关的操作。将change buffer中的操作应用到原数据页的操作叫merge，除了访问该数据页会触发merge外，有后台线程会定期merge，数据库正常关闭的时候也会merge。</li>
-<li>change buffer 用的是 buffer pool 里的内存，因此不能无限增大。change buffer 的大小，可以通过参数 innodb_change_buffer_max_size 来动态设置。这个参数设置为 50 的时候，表示 change buffer 的大小最多只能占用 buffer pool 的 50%。</li>
-</ul>
-<h4 id="什么条件下可以使用change-buffer"><a href="#什么条件下可以使用change-buffer" class="headerlink" title="什么条件下可以使用change buffer"></a>什么条件下可以使用change buffer</h4><ul>
-<li>对于唯一索引来说插入操作需要先判断是否唯一，就需要将数据页读入内存，因此唯一索引不能用change buffer，只有普通索引可以使用。</li>
-<li>对于唯一索引的更新操作，假如数据页不在内存中则需要将数据读入内存，涉及到磁盘IO，而普通索引则可以将更新记录在change buffer，减少了随机磁盘访问，性能提升明显。</li>
-</ul>
-<h4 id="change-buffer-应用场景"><a href="#change-buffer-应用场景" class="headerlink" title="change buffer 应用场景"></a>change buffer 应用场景</h4><ul>
-<li>对于写多读少的业务来说，页面写完后马上被访问到的概率较小，change buffer 被merge的频率小，收益大，典型的业务模型有账单类、日志类系统。</li>
-<li>反之，如果一个业务的更新模式是写入后马上查询，那么也会由于merge而进行频繁的磁盘IO，并且还有维护change buffer的代价，吃力不讨好。</li>
-</ul>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
-<li>因此针对本节的问题，对于查询操作两个索引没有区别，主要考虑更新性能的影响。尽量使用普通索引，配合change buffer提高更新性能。如果有更新完马上查询的业务就关闭change buffer。其他情况下change buffer尽量开大，提升性能。</li>
-</ul>
-<h2 id="redo-log和change-buffer的对比"><a href="#redo-log和change-buffer的对比" class="headerlink" title="redo log和change buffer的对比"></a>redo log和change buffer的对比</h2><ul>
-<li>redo log主要节省的是随机写磁盘的IO消耗（转为顺序写），而change buffer主要节省的是随机读磁盘的IO消耗。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库-基本架构</title>
-    <url>/posts/4/</url>
-    <content><![CDATA[<h1 id="大体上MySQL可以分为Server层和引擎层两个部分"><a href="#大体上MySQL可以分为Server层和引擎层两个部分" class="headerlink" title="大体上MySQL可以分为Server层和引擎层两个部分"></a>大体上MySQL可以分为Server层和引擎层两个部分</h1><h1 id="Server层"><a href="#Server层" class="headerlink" title="Server层"></a>Server层</h1><ul>
-<li><p>Server层包括连接器、查询缓存、分析器、优化器、执行器，涵盖MySQL的大多数核心服务功能，以及所有的内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。</p>
-<h1 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h1><ul>
-<li>基本概念<ul>
-<li>当客户端连接到数据库上的时候，首先接待的便是连接器，连接器负责跟客户端建立连接，获取权限，维持和管理连接。</li>
-</ul>
-</li>
-<li>连接流程<ul>
-<li>连接的命令如下<code>-h$ip -p$port -u$user -p</code> 接着输入密码。完成TCP握手后连接器就会开始身份认证。如果用户或者密码不对就会报<code>Access denied for user</code>错误，客户端结束运行。如果认证通过，接下来连接器会到权限表里面获取当前用户的所有权限。之后该连接的所有权限判断都依据当前获取的权限，意味着即使权限被修改了，也需要重新连接才能使用新的权限。</li>
-<li>完成连接后，如果没有操作该连接便会进入空闲状态，可在show processlist里面查看连接的状态。如果连接超过wait_timeout时间没有动作，默认是8小时，则会将连接断开，如果此时再发起请求将会报<code>Lost connection to MySQL server during query</code>错误。</li>
-</ul>
-</li>
-<li>长连接与短链接<ul>
-<li>基本概念<ul>
-<li>长连接是指如果客户端一直有请求则一直使用该连接。短连接是指每次执行过很少请求后就断开连接，下次查询再重新连接。由于连接过程复杂，所以推荐使用长连接。</li>
-</ul>
-</li>
-<li>长连接的问题与解决方案<ul>
-<li>问题提出<ul>
-<li>MySQL执行过程中使用的内存是在连接内部的，这些资源会在连接断开的时候才释放。如果使用长连接，积累过多了会导致内存暴涨，这个时候系统会强行kill连接，表现出来就是MySQL异常重启了。</li>
-</ul>
-</li>
-<li>解决方案<ul>
-<li>一个是定期断开长连接，或者执行了一个占用内存大的查询后，断开连接并重连。</li>
-<li>另一个是5.7版本后可以使用<code>mysql_reset_connection</code>重新初始化连接资源,不用断开连接。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="查询缓存"><a href="#查询缓存" class="headerlink" title="查询缓存"></a>查询缓存</h1><ul>
-<li>基本概念<ul>
-<li>建立连接后执行逻辑会来到查询缓存。MySQL 拿到一个查询请求后，会先到查询缓存看看，之前是不是执行过这条语句。之前执行过的语句及其结果可能会以 key-value 对的形式，被直接缓存在内存中。key 是查询的语句，value 是查询的结果。如果你的查询能够直接在这个缓存中找到 key，那么这个value 就会被直接返回给客户端。如果语句不在查询缓存中，就会继续后面的执行阶段。执行完成后，执行结果会被存入查询缓存中。但是查询缓存的失效非常频繁，只要有对一个表的更新，这个表上所有的查询缓存都会被清空。对于更新压力大的数据库来说，查询缓存的命中率会非常低。除非你的业务就是有一张静态表，很长时间才会更新一次。比如，一个系统配置表，那这张表上的查询才适合使用查询缓存。</li>
-</ul>
-</li>
-<li>按需使用<ul>
-<li>MySQL 提供了“按需使用”的方式。你可以将参数 query_cache_type 设置成 DEMAND，这样对于默认的 SQL 语句都不使用查询缓存。而对于你确定要使用查询缓存的语句，可以用 SQL_CACHE 显式指定，像下面这个语句一样：mysql&gt; select SQL_CACHE * from T where ID&#x3D;10；</li>
-<li>MySQL 8.0 版本直接将查询缓存的整块功能删掉了。</li>
-</ul>
-</li>
-</ul>
-<h1 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h1><ul>
-<li>基本概念<ul>
-<li>如果没有命中查询缓存，则接下来要开始真正执行语句了。首先MySQL需要知道你要做什么，因此需要对SQL语句做解析。</li>
-</ul>
-</li>
-<li>语句解析分为了词法分析和语法分析<ul>
-<li>词法分析<ul>
-<li>分析的是SQL语句的字符串中分别是什么，代表什么。比如select就标识为查询语句，ID识别为列ID等</li>
-</ul>
-</li>
-<li>语法分析<ul>
-<li>是用来判断SQL语句是否满足MySQL语法，如果不满足则报You have an error in your SQL syntax错误</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h1><ul>
-<li>在开始执行前，还要经过优化器处理。优化器是在表里面有多个索引的时候，决定使用哪个索引，或者在一个语句有多个表关联（join）时，决定各表的连接顺序，这些都会导致执行效率的不同。</li>
-</ul>
-<h1 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h1><ul>
-<li>接下来就是进入执行器阶段，开始执行语句。</li>
-<li>基本流程<ul>
-<li>开始执行的时候，要先判断一下你对这个表 T 有没有执行查询的权限，如果没有，就会返回没有权限的错误。如果有权限，就打开表继续执行。打开表的时候，执行器就会根据表的引擎定义，去使用这个引擎提供的接口。</li>
-<li>比如我们要查询表 T 中ID为10的数据，并且ID 字段没有索引，那么执行器的执行流程是这样的：1. 调用 InnoDB 引擎接口取这个表的第一行，判断 ID 值是不是 10，如果不是则跳过，如果是则将这行存在结果集中；2. 调用引擎接口取“下一行”，重复相同的判断逻辑，直到取到这个表的最后一行。3. 执行器将上述遍历过程中所有满足条件的行组成的记录集作为结果集返回给客户端。</li>
-<li>对于有索引的表，执行的逻辑也差不多。第一次调用的是“取满足条件的第一行”这个接口，之后循环取“满足条件的下一行”这个接口，这些接口都是引擎中已经定义好的。</li>
-<li>在数据库的慢查询日志中看到一个 rows_examined 的字段，表示这个语句执行过程中扫描了多少行。这个值就是在执行器每次调用引擎获取数据行的时候累加的。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h1><ul>
-<li>什么是存储引擎？<ul>
-<li>存储引擎层负责数据的存储和提取，直接与磁盘交互部分。页是存储引擎读写数据的最小单位，一个页里可以有一条或多条表记录。其架构模式是插件式的，支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.5.5 版本开始成为了默认存储引擎，而 InnoDB 是 MySQL 中唯一能够完整支持事务特性的存储引擎。你执行 create table 建表的时候，如果不指定引擎类型，默认使用的就是InnoDB。不过，你也可以通过指定存储引擎的类型来选择别的引擎，比如在 create table语句中使用 engine&#x3D;memory, 来指定使用内存引擎创建表。</li>
-</ul>
-</li>
-<li>什么是随机 IO 和顺序 IO？<ul>
-<li>磁盘读写数据的两种方式。随机 IO 需要先找到地址，再读写数据，每次拿到的地址都是随机的。而顺序 IO，由于地址是连贯的，找到地址后，一次可以读写许多数据，效率比较高。</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>设计模式——策略模式</title>
-    <url>/posts/13/</url>
-    <content><![CDATA[<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 策略接口</span></span><br><span class="line"><span class="keyword">type</span> PaymentStrategy <span class="keyword">interface</span> &#123;</span><br><span class="line">	Pay(amount <span class="type">float64</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：支付宝支付</span></span><br><span class="line"><span class="keyword">type</span> AlipayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *AlipayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;支付宝支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：微信支付</span></span><br><span class="line"><span class="keyword">type</span> WeChatPayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *WeChatPayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;微信支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 环境类</span></span><br><span class="line"><span class="keyword">type</span> PaymentContext <span class="keyword">struct</span> &#123;</span><br><span class="line">	strategy PaymentStrategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> SetStrategy(strategy PaymentStrategy) &#123;</span><br><span class="line">	c.strategy = strategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	c.strategy.Pay(amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建环境对象</span></span><br><span class="line">	context := &amp;PaymentContext&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置支付宝支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;AlipayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">100.0</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置微信支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;WeChatPayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">200.0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>go-zero</category>
-      </categories>
-      <tags>
-        <tag>go-zero</tag>
-        <tag>设计模式</tag>
       </tags>
   </entry>
   <entry>
@@ -615,6 +505,188 @@
       </tags>
   </entry>
   <entry>
+    <title>数据库-基本架构</title>
+    <url>/posts/4/</url>
+    <content><![CDATA[<h1 id="大体上MySQL可以分为Server层和引擎层两个部分"><a href="#大体上MySQL可以分为Server层和引擎层两个部分" class="headerlink" title="大体上MySQL可以分为Server层和引擎层两个部分"></a>大体上MySQL可以分为Server层和引擎层两个部分</h1><h1 id="Server层"><a href="#Server层" class="headerlink" title="Server层"></a>Server层</h1><ul>
+<li><p>Server层包括连接器、查询缓存、分析器、优化器、执行器，涵盖MySQL的大多数核心服务功能，以及所有的内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。</p>
+<h1 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h1><ul>
+<li>基本概念<ul>
+<li>当客户端连接到数据库上的时候，首先接待的便是连接器，连接器负责跟客户端建立连接，获取权限，维持和管理连接。</li>
+</ul>
+</li>
+<li>连接流程<ul>
+<li>连接的命令如下<code>-h$ip -p$port -u$user -p</code> 接着输入密码。完成TCP握手后连接器就会开始身份认证。如果用户或者密码不对就会报<code>Access denied for user</code>错误，客户端结束运行。如果认证通过，接下来连接器会到权限表里面获取当前用户的所有权限。之后该连接的所有权限判断都依据当前获取的权限，意味着即使权限被修改了，也需要重新连接才能使用新的权限。</li>
+<li>完成连接后，如果没有操作该连接便会进入空闲状态，可在show processlist里面查看连接的状态。如果连接超过wait_timeout时间没有动作，默认是8小时，则会将连接断开，如果此时再发起请求将会报<code>Lost connection to MySQL server during query</code>错误。</li>
+</ul>
+</li>
+<li>长连接与短链接<ul>
+<li>基本概念<ul>
+<li>长连接是指如果客户端一直有请求则一直使用该连接。短连接是指每次执行过很少请求后就断开连接，下次查询再重新连接。由于连接过程复杂，所以推荐使用长连接。</li>
+</ul>
+</li>
+<li>长连接的问题与解决方案<ul>
+<li>问题提出<ul>
+<li>MySQL执行过程中使用的内存是在连接内部的，这些资源会在连接断开的时候才释放。如果使用长连接，积累过多了会导致内存暴涨，这个时候系统会强行kill连接，表现出来就是MySQL异常重启了。</li>
+</ul>
+</li>
+<li>解决方案<ul>
+<li>一个是定期断开长连接，或者执行了一个占用内存大的查询后，断开连接并重连。</li>
+<li>另一个是5.7版本后可以使用<code>mysql_reset_connection</code>重新初始化连接资源,不用断开连接。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="查询缓存"><a href="#查询缓存" class="headerlink" title="查询缓存"></a>查询缓存</h1><ul>
+<li>基本概念<ul>
+<li>建立连接后执行逻辑会来到查询缓存。MySQL 拿到一个查询请求后，会先到查询缓存看看，之前是不是执行过这条语句。之前执行过的语句及其结果可能会以 key-value 对的形式，被直接缓存在内存中。key 是查询的语句，value 是查询的结果。如果你的查询能够直接在这个缓存中找到 key，那么这个value 就会被直接返回给客户端。如果语句不在查询缓存中，就会继续后面的执行阶段。执行完成后，执行结果会被存入查询缓存中。但是查询缓存的失效非常频繁，只要有对一个表的更新，这个表上所有的查询缓存都会被清空。对于更新压力大的数据库来说，查询缓存的命中率会非常低。除非你的业务就是有一张静态表，很长时间才会更新一次。比如，一个系统配置表，那这张表上的查询才适合使用查询缓存。</li>
+</ul>
+</li>
+<li>按需使用<ul>
+<li>MySQL 提供了“按需使用”的方式。你可以将参数 query_cache_type 设置成 DEMAND，这样对于默认的 SQL 语句都不使用查询缓存。而对于你确定要使用查询缓存的语句，可以用 SQL_CACHE 显式指定，像下面这个语句一样：mysql&gt; select SQL_CACHE * from T where ID&#x3D;10；</li>
+<li>MySQL 8.0 版本直接将查询缓存的整块功能删掉了。</li>
+</ul>
+</li>
+</ul>
+<h1 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h1><ul>
+<li>基本概念<ul>
+<li>如果没有命中查询缓存，则接下来要开始真正执行语句了。首先MySQL需要知道你要做什么，因此需要对SQL语句做解析。</li>
+</ul>
+</li>
+<li>语句解析分为了词法分析和语法分析<ul>
+<li>词法分析<ul>
+<li>分析的是SQL语句的字符串中分别是什么，代表什么。比如select就标识为查询语句，ID识别为列ID等</li>
+</ul>
+</li>
+<li>语法分析<ul>
+<li>是用来判断SQL语句是否满足MySQL语法，如果不满足则报You have an error in your SQL syntax错误</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h1><ul>
+<li>在开始执行前，还要经过优化器处理。优化器是在表里面有多个索引的时候，决定使用哪个索引，或者在一个语句有多个表关联（join）时，决定各表的连接顺序，这些都会导致执行效率的不同。</li>
+</ul>
+<h1 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h1><ul>
+<li>接下来就是进入执行器阶段，开始执行语句。</li>
+<li>基本流程<ul>
+<li>开始执行的时候，要先判断一下你对这个表 T 有没有执行查询的权限，如果没有，就会返回没有权限的错误。如果有权限，就打开表继续执行。打开表的时候，执行器就会根据表的引擎定义，去使用这个引擎提供的接口。</li>
+<li>比如我们要查询表 T 中ID为10的数据，并且ID 字段没有索引，那么执行器的执行流程是这样的：1. 调用 InnoDB 引擎接口取这个表的第一行，判断 ID 值是不是 10，如果不是则跳过，如果是则将这行存在结果集中；2. 调用引擎接口取“下一行”，重复相同的判断逻辑，直到取到这个表的最后一行。3. 执行器将上述遍历过程中所有满足条件的行组成的记录集作为结果集返回给客户端。</li>
+<li>对于有索引的表，执行的逻辑也差不多。第一次调用的是“取满足条件的第一行”这个接口，之后循环取“满足条件的下一行”这个接口，这些接口都是引擎中已经定义好的。</li>
+<li>在数据库的慢查询日志中看到一个 rows_examined 的字段，表示这个语句执行过程中扫描了多少行。这个值就是在执行器每次调用引擎获取数据行的时候累加的。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h1><ul>
+<li>什么是存储引擎？<ul>
+<li>存储引擎层负责数据的存储和提取，直接与磁盘交互部分。页是存储引擎读写数据的最小单位，一个页里可以有一条或多条表记录。其架构模式是插件式的，支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.5.5 版本开始成为了默认存储引擎，而 InnoDB 是 MySQL 中唯一能够完整支持事务特性的存储引擎。你执行 create table 建表的时候，如果不指定引擎类型，默认使用的就是InnoDB。不过，你也可以通过指定存储引擎的类型来选择别的引擎，比如在 create table语句中使用 engine&#x3D;memory, 来指定使用内存引擎创建表。</li>
+</ul>
+</li>
+<li>什么是随机 IO 和顺序 IO？<ul>
+<li>磁盘读写数据的两种方式。随机 IO 需要先找到地址，再读写数据，每次拿到的地址都是随机的。而顺序 IO，由于地址是连贯的，找到地址后，一次可以读写许多数据，效率比较高。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设计模式——策略模式</title>
+    <url>/posts/13/</url>
+    <content><![CDATA[<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 策略接口</span></span><br><span class="line"><span class="keyword">type</span> PaymentStrategy <span class="keyword">interface</span> &#123;</span><br><span class="line">	Pay(amount <span class="type">float64</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：支付宝支付</span></span><br><span class="line"><span class="keyword">type</span> AlipayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *AlipayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;支付宝支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体策略：微信支付</span></span><br><span class="line"><span class="keyword">type</span> WeChatPayStrategy <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *WeChatPayStrategy)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;微信支付：￥%.2f\n&quot;</span>, amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 环境类</span></span><br><span class="line"><span class="keyword">type</span> PaymentContext <span class="keyword">struct</span> &#123;</span><br><span class="line">	strategy PaymentStrategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> SetStrategy(strategy PaymentStrategy) &#123;</span><br><span class="line">	c.strategy = strategy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *PaymentContext)</span></span> Pay(amount <span class="type">float64</span>) &#123;</span><br><span class="line">	c.strategy.Pay(amount)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建环境对象</span></span><br><span class="line">	context := &amp;PaymentContext&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置支付宝支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;AlipayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">100.0</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置微信支付策略</span></span><br><span class="line">	context.SetStrategy(&amp;WeChatPayStrategy&#123;&#125;)</span><br><span class="line">	context.Pay(<span class="number">200.0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>go-zero</category>
+      </categories>
+      <tags>
+        <tag>go-zero</tag>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法笔记1</title>
+    <url>/posts/15/</url>
+    <content><![CDATA[<p>链表专题<br>合并链表<br>反转链表<br>反转整个链表<br>    递归实现<br>反转前n个节点<br>    basecase为1，记录一个后驱节点<br>反转mn区间的节点<br>    m&#x3D;&#x3D;1，不为1则前进到触发m&#x3D;&#x3D;1</p>
+<p>记住那几个图是关键</p>
+]]></content>
+      <categories>
+        <category>blog</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库：说一说InnoDB刷脏页</title>
+    <url>/posts/6/</url>
+    <content><![CDATA[<h1 id="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"><a href="#为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）" class="headerlink" title="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"></a>为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）</h1><h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><ul>
+<li>可能是在刷脏页（flush）（脏页即当内存数据页跟磁盘数据页内容不一致的时候，称这个内存页为脏页。）<ul>
+<li>第一种情况是redo log写满了。这时候系统会停止所有更新操作，把checkpoint往前推进，并且刷脏页，redo log留出空间可以继续写。</li>
+<li>第二种情况就是系统内存不足。这时候会要淘汰一些数据页，如果淘汰的是“脏页”，需要先将脏页写入磁盘。<ul>
+<li>InnoDB缓冲池中的内存页的三种状态<ul>
+<li>还没使用的</li>
+<li>使用了的干净页</li>
+<li>使用了的脏页</li>
+</ul>
+</li>
+<li>申请数据页<ul>
+<li>当要读入的数据页没有在内存的时候，就必须到缓冲池中申请一个数据页。这时候得把最久不使用的数据页从内存中淘汰掉。当淘汰的是脏页的时候就得先刷脏页，出现以下两种情况便会影响性能<ul>
+<li>一个查询要淘汰的脏页个数太多，导致这个查询的响应时间明显变长。</li>
+<li>日志写满了，更新全堵住，写性能跌为0。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第三种情况是MySQL认为系统处于“空闲”状态，会进行刷脏页，但既然都是空闲了，不太可能影响性能</li>
+<li>第四种情况是MySQL正常关闭的情况，也会刷脏页。正常关闭了，也不会影响性能。</li>
+</ul>
+<h1 id="InnoDB刷脏页的控制策略"><a href="#InnoDB刷脏页的控制策略" class="headerlink" title="InnoDB刷脏页的控制策略"></a>InnoDB刷脏页的控制策略</h1><ul>
+<li>为什么需要<ul>
+<li>InnoDB需要有控制脏页比例的机制，来尽量避免一次性淘汰的脏页过多或者日志写满影响读写性能。</li>
+<li>刷脏页具体机制以及这些策略相关的参数<ul>
+<li>首先通过设置innodb_io_capacity告诉InnoDB磁盘读写能力，通常设置成磁盘的IOPS，可通过fio工具测试，得到InnoDB最大刷脏页速度。</li>
+<li>InnoDB通过全力的百分比来刷脏页<ul>
+<li>InnoDB会先根据脏页占整个缓存池的比例以及redo log写盘速度两个因素算出两个值。<ul>
+<li>参数innodb_maxdirty_pages_pct是脏页的比例上限，默认75%。</li>
+<li>第一个值是依据脏页占缓存池的比例算出来的</li>
+<li>第二个值是根据redo log中write pos和checkpoint的差值计算出来的</li>
+<li>最后按照最大刷脏页速度 * max（f1，f2）%的速度刷脏页</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>总结</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>计网-传输层八股（一）</title>
     <url>/posts/11/</url>
     <content><![CDATA[<h1 id="3-10-简述-TCP-和-UDP-的区别，它们的头部结构是什么样的"><a href="#3-10-简述-TCP-和-UDP-的区别，它们的头部结构是什么样的" class="headerlink" title="3.10 简述 TCP 和 UDP 的区别，它们的头部结构是什么样的"></a>3.10 简述 TCP 和 UDP 的区别，它们的头部结构是什么样的</h1><ul>
@@ -681,63 +753,6 @@
       <tags>
         <tag>blog</tag>
         <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库：说一说InnoDB刷脏页</title>
-    <url>/posts/6/</url>
-    <content><![CDATA[<h1 id="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"><a href="#为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）" class="headerlink" title="为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）"></a>为什么SQL语句正常时很快，有时很慢？也就是“抖”一下（本质就是问说一说InnoDB刷脏页）</h1><h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><ul>
-<li>可能是在刷脏页（flush）（脏页即当内存数据页跟磁盘数据页内容不一致的时候，称这个内存页为脏页。）<ul>
-<li>第一种情况是redo log写满了。这时候系统会停止所有更新操作，把checkpoint往前推进，并且刷脏页，redo log留出空间可以继续写。</li>
-<li>第二种情况就是系统内存不足。这时候会要淘汰一些数据页，如果淘汰的是“脏页”，需要先将脏页写入磁盘。<ul>
-<li>InnoDB缓冲池中的内存页的三种状态<ul>
-<li>还没使用的</li>
-<li>使用了的干净页</li>
-<li>使用了的脏页</li>
-</ul>
-</li>
-<li>申请数据页<ul>
-<li>当要读入的数据页没有在内存的时候，就必须到缓冲池中申请一个数据页。这时候得把最久不使用的数据页从内存中淘汰掉。当淘汰的是脏页的时候就得先刷脏页，出现以下两种情况便会影响性能<ul>
-<li>一个查询要淘汰的脏页个数太多，导致这个查询的响应时间明显变长。</li>
-<li>日志写满了，更新全堵住，写性能跌为0。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>第三种情况是MySQL认为系统处于“空闲”状态，会进行刷脏页，但既然都是空闲了，不太可能影响性能</li>
-<li>第四种情况是MySQL正常关闭的情况，也会刷脏页。正常关闭了，也不会影响性能。</li>
-</ul>
-<h1 id="InnoDB刷脏页的控制策略"><a href="#InnoDB刷脏页的控制策略" class="headerlink" title="InnoDB刷脏页的控制策略"></a>InnoDB刷脏页的控制策略</h1><ul>
-<li>为什么需要<ul>
-<li>InnoDB需要有控制脏页比例的机制，来尽量避免一次性淘汰的脏页过多或者日志写满影响读写性能。</li>
-<li>刷脏页具体机制以及这些策略相关的参数<ul>
-<li>首先通过设置innodb_io_capacity告诉InnoDB磁盘读写能力，通常设置成磁盘的IOPS，可通过fio工具测试，得到InnoDB最大刷脏页速度。</li>
-<li>InnoDB通过全力的百分比来刷脏页<ul>
-<li>InnoDB会先根据脏页占整个缓存池的比例以及redo log写盘速度两个因素算出两个值。<ul>
-<li>参数innodb_maxdirty_pages_pct是脏页的比例上限，默认75%。</li>
-<li>第一个值是依据脏页占缓存池的比例算出来的</li>
-<li>第二个值是根据redo log中write pos和checkpoint的差值计算出来的</li>
-<li>最后按照最大刷脏页速度 * max（f1，f2）%的速度刷脏页</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>总结</tag>
-        <tag>MySQL</tag>
       </tags>
   </entry>
 </search>
